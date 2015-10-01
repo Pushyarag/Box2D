@@ -152,7 +152,7 @@ namespace cs251
       m_world->CreateJoint(&jd);
     }
       
-    //The train of small spheres
+    /*//The train of small spheres
     {
       b2Body* spherebody;
 	
@@ -173,7 +173,27 @@ namespace cs251
 	  spherebody = m_world->CreateBody(&ballbd);
 	  spherebody->CreateFixture(&ballfd);
 	}
+    }*/
+
+//The heavy sphere on the platform
+    {
+      b2Body* sbody;
+      b2CircleShape circle;
+      circle.m_radius = 2.0;
+  
+      b2FixtureDef ballfd;
+      ballfd.shape = &circle;
+      ballfd.density = 150.0f;
+      ballfd.friction = 0.0f;
+      ballfd.restitution = 0.0f;
+      b2BodyDef ballbd;
+      ballbd.type = b2_dynamicBody;
+      ballbd.position.Set(-22.2f, 26.6f);
+      sbody = m_world->CreateBody(&ballbd);
+      sbody->CreateFixture(&ballfd);
     }
+
+
 
     //The pulley system
     {
@@ -287,7 +307,7 @@ namespace cs251
       b2Vec2 vertices[3];
       vertices[0].Set(-1,0);
       vertices[1].Set(1,0);
-      vertices[2].Set(0,1.5);
+      vertices[2].Set(0,4.5);
       poly.Set(vertices, 3);
       b2FixtureDef wedgefd;
       wedgefd.shape = &poly;
@@ -303,7 +323,7 @@ namespace cs251
       b2PolygonShape shape;
       shape.SetAsBox(15.0f, 0.2f);
       b2BodyDef bd2;
-      bd2.position.Set(-30.0f, 1.5f);
+      bd2.position.Set(-30.0f, 4.5f);
       bd2.type = b2_dynamicBody;
       b2Body* body = m_world->CreateBody(&bd2);
       b2FixtureDef *fd2 = new b2FixtureDef;
@@ -314,7 +334,7 @@ namespace cs251
 
       b2RevoluteJointDef jd;
       b2Vec2 anchor;
-      anchor.Set(-30.0f, 1.5f);
+      anchor.Set(-30.0f, 4.5f);
       jd.Initialize(sbody, body, anchor);
       m_world->CreateJoint(&jd);
 
@@ -322,7 +342,7 @@ namespace cs251
       b2PolygonShape shape2;
       shape2.SetAsBox(2.0f, 2.0f);
       b2BodyDef bd3;
-      bd3.position.Set(-40.0f, 2.0f);
+      bd3.position.Set(-40.0f, 5.0f);
       bd3.type = b2_dynamicBody;
       b2Body* body3 = m_world->CreateBody(&bd3);
       b2FixtureDef *fd3 = new b2FixtureDef;
