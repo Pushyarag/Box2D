@@ -96,11 +96,29 @@ namespace cs251
       shape.SetAsBox(7.0f, 0.25f, b2Vec2(-20.f,20.f), 0.0f);
 	
       b2BodyDef bd;
-      bd.position.Set(1.0f, 6.0f);
+      bd.position.Set(17.0f, -12.0f);
       b2Body* ground = m_world->CreateBody(&bd);
       ground->CreateFixture(&shape, 0.0f);
     }
 
+
+//The heavy sphere on the platform
+    {
+      b2Body* sbody;
+      b2CircleShape circle;
+      circle.m_radius = 2.0;
+  
+      b2FixtureDef ballfd;
+      ballfd.shape = &circle;
+      ballfd.density = 50.0f;
+      ballfd.friction = 0.0f;
+      ballfd.restitution = 0.0f;
+      b2BodyDef ballbd;
+      ballbd.type = b2_dynamicBody;
+      ballbd.position.Set(-10.0f, 10.0f);
+      sbody = m_world->CreateBody(&ballbd);
+      sbody->CreateFixture(&ballfd);
+    }
 
     //The pendulum that knocks the dominos off
     {
@@ -312,8 +330,22 @@ namespace cs251
       fd3->shape = new b2PolygonShape;
       fd3->shape = &shape2;
       body3->CreateFixture(fd3);
+
+
     }
   }
 
   sim_t *sim = new sim_t("Dominos", dominos_t::create);
 }
+
+// b2BodyDef bodyDef;
+// bodyDef.type = b2_dynamicBody;
+// bodyDef.position.Set(0.0f, 4.0f);
+// b2Body* bodyt = m_world->CreateBody(&bodyDef);
+// b2PolygonShape dynamicBox;
+// dynamicBox.SetAsBox(1.0f, 1.0f);
+// b2FixtureDef fixtureDef;
+// fixtureDef.shape = &dynamicBox;
+// fixtureDef.density = 1.0f;
+// fixtureDef.friction = 0.3f;
+// bodyt->CreateFixture(&fixtureDef);
