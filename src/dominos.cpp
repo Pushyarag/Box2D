@@ -59,7 +59,7 @@ namespace cs251
       b1->CreateFixture(&shape, 0.0f);
     }
           
-    //Top horizontal shelf
+    /*//Top horizontal shelf
     {
       b2PolygonShape shape;
       shape.SetAsBox(6.0f, 0.25f);
@@ -69,7 +69,7 @@ namespace cs251
       b2Body* ground = m_world->CreateBody(&bd);
       ground->CreateFixture(&shape, 0.0f);
     }
-
+*/
     //Dominos
     {
       b2PolygonShape shape;
@@ -96,7 +96,7 @@ namespace cs251
       shape.SetAsBox(7.0f, 0.25f, b2Vec2(-20.f,20.f), 0.0f);
 	
       b2BodyDef bd;
-      bd.position.Set(17.0f, -12.0f);
+      bd.position.Set(13.0f, -12.0f);
       b2Body* ground = m_world->CreateBody(&bd);
       ground->CreateFixture(&shape, 0.0f);
     }
@@ -110,12 +110,12 @@ namespace cs251
   
       b2FixtureDef ballfd;
       ballfd.shape = &circle;
-      ballfd.density = 50.0f;
+      ballfd.density = 0.005f;
       ballfd.friction = 0.0f;
       ballfd.restitution = 0.0f;
       b2BodyDef ballbd;
       ballbd.type = b2_dynamicBody;
-      ballbd.position.Set(-10.0f, 10.0f);
+      ballbd.position.Set(-14.0f, 10.0f);
       sbody = m_world->CreateBody(&ballbd);
       sbody->CreateFixture(&ballfd);
     }
@@ -321,7 +321,7 @@ namespace cs251
 
       //The plank on top of the wedge
       b2PolygonShape shape;
-      shape.SetAsBox(15.0f, 0.2f);
+      shape.SetAsBox(10.0f, 0.2f);
       b2BodyDef bd2;
       bd2.position.Set(-30.0f, 4.5f);
       bd2.type = b2_dynamicBody;
@@ -340,13 +340,13 @@ namespace cs251
 
       //The light box on the right side of the see-saw
       b2PolygonShape shape2;
-      shape2.SetAsBox(2.0f, 2.0f);
+      shape2.SetAsBox(1.0f, 1.0f);
       b2BodyDef bd3;
-      bd3.position.Set(-40.0f, 5.0f);
+      bd3.position.Set(-38.0f, 5.0f);
       bd3.type = b2_dynamicBody;
       b2Body* body3 = m_world->CreateBody(&bd3);
       b2FixtureDef *fd3 = new b2FixtureDef;
-      fd3->density = 0.01f;
+      fd3->density = 0.06f;
       fd3->shape = new b2PolygonShape;
       fd3->shape = &shape2;
       body3->CreateFixture(fd3);
