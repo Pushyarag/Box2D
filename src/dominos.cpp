@@ -277,7 +277,7 @@ namespace cs251
       wedgefd.friction = 0.0f;
       wedgefd.restitution = 0.0f;
       b2BodyDef wedgebd;
-      wedgebd.position.Set(30.0f, 0.0f);
+      wedgebd.position.Set(-30.0f, 0.0f);
       sbody = m_world->CreateBody(&wedgebd);
       sbody->CreateFixture(&wedgefd);
 
@@ -285,7 +285,7 @@ namespace cs251
       b2PolygonShape shape;
       shape.SetAsBox(15.0f, 0.2f);
       b2BodyDef bd2;
-      bd2.position.Set(30.0f, 1.5f);
+      bd2.position.Set(-30.0f, 1.5f);
       bd2.type = b2_dynamicBody;
       b2Body* body = m_world->CreateBody(&bd2);
       b2FixtureDef *fd2 = new b2FixtureDef;
@@ -296,7 +296,7 @@ namespace cs251
 
       b2RevoluteJointDef jd;
       b2Vec2 anchor;
-      anchor.Set(30.0f, 1.5f);
+      anchor.Set(-30.0f, 1.5f);
       jd.Initialize(sbody, body, anchor);
       m_world->CreateJoint(&jd);
 
@@ -304,7 +304,7 @@ namespace cs251
       b2PolygonShape shape2;
       shape2.SetAsBox(2.0f, 2.0f);
       b2BodyDef bd3;
-      bd3.position.Set(40.0f, 2.0f);
+      bd3.position.Set(-40.0f, 2.0f);
       bd3.type = b2_dynamicBody;
       b2Body* body3 = m_world->CreateBody(&bd3);
       b2FixtureDef *fd3 = new b2FixtureDef;
