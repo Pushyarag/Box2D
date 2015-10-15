@@ -45,6 +45,35 @@ namespace cs251
   
   dominos_t::dominos_t()
   {
+
+
+
+class block{
+public:
+  block(float h,float w,float x,float y,int a, b2World* m_world){
+
+    b2PolygonShape shape;
+      shape.SetAsBox(h, w);
+  
+      b2BodyDef bd;
+      bd.angle = a; //set the starting angle
+      bd.position.Set(x, y);
+      bd.type = b2_dynamicBody;
+      b2Body* body = m_world->CreateBody(&bd);
+      b2FixtureDef *fd = new b2FixtureDef;
+      fd->density = 1.f;
+      fd->shape = new b2PolygonShape;
+      fd->shape = &shape;
+      body->CreateFixture(fd);
+
+  }
+};
+
+
+
+
+
+block* b;
     //Ground
     /*! \var b1 
      * \brief pointer to the body ground 
@@ -382,6 +411,18 @@ namespace cs251
       jointDef.localAnchorB.Set(0,0);
       jointDef.collideConnected = false;
       m_world->CreateJoint(&jointDef);
+    
+  b=new block(2.0f,0.2f,24.4f,2.4f,45,m_world);
+  b=new block(2.0f,0.2f,22.4f,2.4f,-45,m_world);
+b2WeldJointDef weldJointDef;
+//weldJointDef.bodyA = contact.fixtureA->GetBody();
+//weldJointDef.bodyB = contact.fixtureB->GetBody();
+
+//weldJointDef.collideConnected = true;
+//b2Vec2 anchor = weldJointDef.bodyA->GetPosition(); 
+//weldJointDef.Initialize(bodyA, bodyB, anchor);
+//world->CreateJoint(&weldJointDef);
+
     }
 
 
