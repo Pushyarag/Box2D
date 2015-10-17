@@ -105,7 +105,7 @@ public:
     b2Body* body;
     b2BodyDef bd;
 
-    block(float w,float h,float x,float y,float density,int a, b2World* m_world,int s_d=0)
+    block(float w,float h,float x,float y,float density,int a, b2World* m_world,int s_d=0, float friction = 1.0f)
     {
 
         b2PolygonShape shape;
@@ -121,6 +121,7 @@ public:
         fd->density = density;
         fd->shape = new b2PolygonShape;
         fd->shape = &shape;
+        fd->friction = friction;
         body->CreateFixture(fd);
 
     }
@@ -366,14 +367,24 @@ dominos_t::dominos_t()
 
     new dominoes(1.0f,0.1f,10.0f+dominoes_and_block_x,10.0f+dominoes_and_block_y,1.0f,20.0f,0.1f,9,m_world);
     new block(6.0f,0.1f,14.5f+dominoes_and_block_x,10.0f+dominoes_and_block_y,1.f,0,m_world,0);
-    new block(1.0f,1.0f,19.5f+dominoes_and_block_x,10.1f+dominoes_and_block_y,1.f,0,m_world,1);
+    //new block(1.0f,1.0f,19.5f+dominoes_and_block_x,10.1f+dominoes_and_block_y,1.f,0,m_world,1);
+    new sphere(1.0f,1.0f,0.5f,0.0f,19.5f+dominoes_and_block_x,10.1f+dominoes_and_block_y,1,m_world);
 
     new revolving_platform(-2.0f,2.0f,-30.6f,-13.0f,100.0f,m_world);
     new revolving_platform(-2.0f,2.0f,-30.9f,-9.0f,100.0f,m_world);
     new revolving_platform(-2.0f,2.0f,-30.6f,-5.0f,100.0f,m_world);
     new revolving_platform(-2.0f,2.0f,-30.9f,-1.0f,100.0f,m_world);
 
+        new block(5.0f,0.2f,-1.7f,10.5f,0.05f,-45,m_world,0, 1.0f  );
+  //  new sphere(1.0f,-1.7f,0.1f,4.0f,25.2f,0,m_world);
+
+new revolving_platform(1.0f,0.0f,-9.6f,-11.0f,10.0f,m_world);
+
+
 }
+
+
+
 
 
 
