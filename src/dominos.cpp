@@ -427,22 +427,6 @@ dominos_t::dominos_t()
     //  new sphere(1.0f,-1.7f,0.1f,4.0f,25.2f,0,m_world);
 
 
-    new revolving_platform(3.0f,0.0f,4.0f,20.0f,10.0f,m_world);
-    new sphere(1.0f,5.f,0.0f,0.1f,18.0f,37.2f,1,m_world);
-
-    new revolving_platform(3.0f,0.0f,13.0f,19.5f,10.0f,m_world);
-    new sphere(1.0f,5.f,0.0f,0.1f,27.0f,36.7f,1,m_world);
-
-    new revolving_platform(3.0f,0.0f,22.0f,20.0f,10.0f,m_world);
-    new sphere(1.0f,5.f,0.0f,0.1f,36.0f,37.2f,1,m_world);
-    new revolving_platform(3.0f,0.0f,31.0f,19.5f,10.0f,m_world);
-    new sphere(1.0f,5.f,0.0f,0.1f,45.0f,36.7f,1,m_world);
-
-
-
-    new revolving_platform(1.0f,0.0f,-9.6f,-11.0f,10.0f,m_world);
-    new sphere(1.0f,5.f,0.0f,0.1f,4.4f,4.2f,0,m_world);
-
 {
 
       //The revolving Launcher
