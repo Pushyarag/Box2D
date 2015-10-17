@@ -53,7 +53,7 @@ public:
   b2Body* body;
   b2BodyDef bd;
 
-  block(float h,float w,float x,float y,int a, b2World* m_world,int s_d=0){
+  block(float h,float w,float x,float y,int a, b2World* m_world,int s_d=1,float  den=1.0f){
 
     b2PolygonShape shape;
       shape.SetAsBox(h, w);
@@ -65,7 +65,7 @@ public:
       if(s_d==0)bd.type = b2_staticBody;
       body = m_world->CreateBody(&bd);
       b2FixtureDef *fd = new b2FixtureDef;
-      fd->density = 1.f;
+      fd->density = den;
       fd->shape = new b2PolygonShape;
       fd->shape = &shape;
       body->CreateFixture(fd);
@@ -89,17 +89,23 @@ m_world->CreateJoint(&weldJointDef);
 
 class rev_j{
 public:
-  rev_j(b2Body* b1,b2Body* b2,float x,float y,b2World* m_world){
+  rev_j(b2Body* b1,b2Body* b2,float x,float y,b2World* m_world,int mot=0){
 
 
 b2RevoluteJointDef jd;
+
+
+if(mot!=0){
+jd.enableMotor = true;
+jd.motorSpeed = -2;
+jd.maxMotorTorque = 10;
+}
       b2Vec2 anchor;
       anchor.Set(x, y);
       jd.Initialize(b1, b2, anchor);
       m_world->CreateJoint(&jd);
  }
 };
-
 
 
 
@@ -456,6 +462,7 @@ float x=30.0f;
 float y=20.1f;
 b=new block(3.0f,0.2f,x,y+2.2f,30,m_world,1);
 b2Body* b1=b->body;
+// base of the bucket b2
 b=new block(1.5f,0.2f,x+2.0f,y,0,m_world,1);
 b2Body* b2=b->body;
 w=new weld(b1,b2,x+0.5f, y,m_world);
@@ -479,9 +486,52 @@ b=new block(5.0f,0.2f,x+7.5f,y,0,m_world,0);
 b2Body* b3=b->body;
 r=new rev_j(b2,b3,x+2.5f, y,m_world);
 
+}
+
+
+
+{
+//the pulley motor
+  float x=22.0f;
+float y=20.0f;
+b=new block(3.0f,0.1f,x,y,0,m_world,1);
+b2Body* b1=b->body;
+b=new block(3.0f,0.1f,x,y,45,m_world,1);
+b2Body* b2=b->body;
+b=new block(3.0f,0.1f,x,y,90,m_world,1);
+b2Body* b3=b->body;
+b=new block(0.001f,0.001f,x,y,0,m_world,0);
+b2Body* b4=b->body;
+//b=new block(3.0f,0.2f,x,y,5,m_world,0);
+
+//the pendulum
+//b=new block(0.2f,5.2f,x,y-5.0f,0,m_world,1);
+//b2Body* b5=b->body;
+//b->bd.position.Set(0.0f, -52.0f);
+
+// //the bob b6
+// b=new block(0.5f,0.5f,x-6.0f,y-10.0f,0,m_world,1,80.0f);
+// b2Body* b6=b->body;
+//  b6->SetGravityScale(90);
+// w=new weld(b2,b6,x, y,m_world);
+// r=new rev_j(b6,b3,x, y,m_world);
+
+
+w=new weld(b1,b2,x, y,m_world);
+w=new weld(b2,b3,x, y,m_world);
+r=new rev_j(b4,b3,x, y,m_world,1);
+r=new rev_j(b4,b2,x, y,m_world,1);
+r=new rev_j(b4,b1,x, y,m_world,1);
+
+//test
+//b=new block(0.5f,0.5f,x+2.2f,y+5.0f,0,m_world,1);
+//b2Body* b7=b->body;
+
+//w=new weld(b6,b5,x, y-10.0f,m_world);
 
 
 }
+
 
     }
   }
