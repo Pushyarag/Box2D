@@ -50,16 +50,20 @@ namespace cs251
 
 class block{
 public:
-  block(float h,float w,float x,float y,int a, b2World* m_world){
+  b2Body* body;
+  b2BodyDef bd;
+
+  block(float h,float w,float x,float y,int a, b2World* m_world,int s_d=0){
 
     b2PolygonShape shape;
       shape.SetAsBox(h, w);
   
-      b2BodyDef bd;
+      
       bd.angle = a; //set the starting angle
       bd.position.Set(x, y);
-      bd.type = b2_dynamicBody;
-      b2Body* body = m_world->CreateBody(&bd);
+      if(s_d==1)bd.type = b2_dynamicBody;
+      if(s_d==0)bd.type = b2_staticBody;
+      body = m_world->CreateBody(&bd);
       b2FixtureDef *fd = new b2FixtureDef;
       fd->density = 1.f;
       fd->shape = new b2PolygonShape;
@@ -70,10 +74,38 @@ public:
 };
 
 
+class weld{
+public:
+  weld(b2Body* b1,b2Body* b2,float x,float y,b2World* m_world){
+b2WeldJointDef weldJointDef;
+weldJointDef.collideConnected = true;
+b2Vec2 anchor;
+      anchor.Set(x, y);
+weldJointDef.Initialize(b1, b2, anchor);
+m_world->CreateJoint(&weldJointDef);
+}
+};
+
+
+class rev_j{
+public:
+  rev_j(b2Body* b1,b2Body* b2,float x,float y,b2World* m_world){
+
+
+b2RevoluteJointDef jd;
+      b2Vec2 anchor;
+      anchor.Set(x, y);
+      jd.Initialize(b1, b2, anchor);
+      m_world->CreateJoint(&jd);
+ }
+};
+
 
 
 
 block* b;
+weld* w;
+rev_j* r;
     //Ground
     /*! \var b1 
      * \brief pointer to the body ground 
@@ -254,7 +286,7 @@ block* b;
       fd3->restitution = 0.f;
       fd3->shape = new b2PolygonShape;
       b2PolygonShape bs3;
-      bs3.SetAsBox(0.2,2, b2Vec2(-2.0f,0.f), 0);
+      bs3.SetAsBox(0.2,2, b2Vec2(-2.0f,0.f), 45);
       fd3->shape = &bs3;
        
       b2Body* box1 = m_world->CreateBody(bd);
@@ -412,19 +444,44 @@ block* b;
       jointDef.collideConnected = false;
       m_world->CreateJoint(&jointDef);
     
-  b=new block(2.0f,0.2f,24.4f,2.4f,45,m_world);
-  b=new block(2.0f,0.2f,22.4f,2.4f,-45,m_world);
-b2WeldJointDef weldJointDef;
-//weldJointDef.bodyA = contact.fixtureA->GetBody();
-//weldJointDef.bodyB = contact.fixtureB->GetBody();
+  b=new block(2.0f,0.2f,24.4f,2.4f,45,m_world,1);
+  b=new block(2.0f,0.2f,22.4f,2.4f,-45,m_world,1);
 
-//weldJointDef.collideConnected = true;
-//b2Vec2 anchor = weldJointDef.bodyA->GetPosition(); 
-//weldJointDef.Initialize(bodyA, bodyB, anchor);
-//world->CreateJoint(&weldJointDef);
 
     }
 
+{
+  //Bucket of water
+float x=30.0f;
+float y=20.1f;
+b=new block(3.0f,0.2f,x,y+2.2f,30,m_world,1);
+b2Body* b1=b->body;
+b=new block(1.5f,0.2f,x+2.0f,y,0,m_world,1);
+b2Body* b2=b->body;
+w=new weld(b1,b2,x+0.5f, y,m_world);
+b=new block(3.0f,0.2f,x+4.0f,y+2.2f,-30,m_world,1);
+b2Body* b4=b->body;
+w=new weld(b4,b2,x+3.5f, y,m_world);
+//lid of bucket b5
+b=new block(2.0f,0.2f,x+3.2f,y+4.8f,0,m_world,1);
+b2Body* b5=b->body;
+w=new weld(b5,b4,x+4.6f, y+4.8f,m_world);
+
+//water
+for(int i=0;i<20;i++){
+for(int j=0;j<15;j++){
+b=new block(0.1f,0.1f,x+0.5f+0.2f*j,y+1.2f+0.2f*i,30,m_world,1);
+}
+}
+
+//pivoting the bucket
+b=new block(5.0f,0.2f,x+7.5f,y,0,m_world,0);
+b2Body* b3=b->body;
+r=new rev_j(b2,b3,x+2.5f, y,m_world);
+
+
+
+}
 
     }
   }
