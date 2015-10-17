@@ -305,6 +305,42 @@ dominos_t::dominos_t()
     new sphere(1.0f,5.f,0.0f,0.1f,4.0f,27.2f,1,m_world);
     new sphere(1.0f,5.f,0.0f,0.1f,4.0f,25.2f,0,m_world);
 
+     //Dominos
+
+    class dominoes
+    {
+
+        public:
+
+        dominoes(float h, float w, float x, float y,float gap, float density, float friction, int n, b2World *m_world)
+        {
+        b2PolygonShape shape;
+        shape.SetAsBox(w, h);
+
+        b2FixtureDef fd;
+        fd.shape = &shape;
+        fd.density = density;
+        fd.friction = friction;
+
+        for (int i = 0; i < n; ++i)
+        {
+            b2BodyDef bd;
+            bd.type = b2_dynamicBody;
+            bd.position.Set(x + gap * i-0.45f, y);
+            b2Body* body = m_world->CreateBody(&bd);
+            body->CreateFixture(&fd);
+        }
+        }
+    };
+    float dominoes_and_block_x,dominoes_and_block_y;
+    dominoes_and_block_x=-25.0f;
+    dominoes_and_block_y=5.0f;
+    new dominoes(1.0f,0.1f,10.0f+dominoes_and_block_x,10.0f+dominoes_and_block_y,1.0f,20.0f,0.1f,10,m_world);
+    new block(6.0f,0.1f,14.5f+dominoes_and_block_x,10.0f+dominoes_and_block_y,1.f,0,m_world,0);
+
+
+
+
 
 
 }
