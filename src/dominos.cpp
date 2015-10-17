@@ -61,6 +61,46 @@ public:
 };
 
 
+
+
+
+
+
+class weld{
+public:
+  weld(b2Body* b1,b2Body* b2,float x,float y,b2World* m_world){
+b2WeldJointDef weldJointDef;
+weldJointDef.collideConnected = true;
+b2Vec2 anchor;
+      anchor.Set(x, y);
+weldJointDef.Initialize(b1, b2, anchor);
+m_world->CreateJoint(&weldJointDef);
+}
+};
+
+
+class rev_j{
+public:
+  rev_j(b2Body* b1,b2Body* b2,float x,float y,b2World* m_world,int mot=0){
+
+
+b2RevoluteJointDef jd;
+
+
+if(mot!=0){
+jd.enableMotor = true;
+jd.motorSpeed = mot;
+jd.maxMotorTorque = 1000;
+}
+      b2Vec2 anchor;
+      anchor.Set(x, y);
+      jd.Initialize(b1, b2, anchor);
+      m_world->CreateJoint(&jd);
+ }
+};
+
+
+
 /*!  sphere object
        * \brief This is the class to create spheres
        */
@@ -88,7 +128,7 @@ public:
         sbody->CreateFixture(&ballfd);
         if(!gravity)
         {
-            sbody->SetGravityScale(-1);
+            sbody->SetGravityScale(-0.3);
         }
     }
 };
@@ -105,7 +145,7 @@ public:
     b2Body* body;
     b2BodyDef bd;
 
-    block(float w,float h,float x,float y,float density,int a, b2World* m_world,int s_d=0, float friction = 1.0f)
+    block(float w,float h,float x,float y,int a, b2World* m_world,int s_d=0, float friction =1.0f,float density=1.0f)
     {
 
         b2PolygonShape shape;
@@ -193,6 +233,8 @@ public:
         m_world->CreateJoint(myjoint);
     }
 };
+
+
 
 
 
@@ -317,16 +359,22 @@ public:
 
 
 
+block* b;
+weld* w;
+rev_j* r;
+sphere* s;
+
+
 /**  The is the constructor
 * This is the documentation block for the constructor.
 */
+
 dominos_t::dominos_t()
 {
     //Ground
     /*! \var b1
      * \brief pointer to the body ground
      */
-
 
     new ground(m_world);
 
@@ -338,8 +386,8 @@ dominos_t::dominos_t()
     new sphere(1.0f,5.f,0.0f,0.1f,-52.0f,22.0f,1,m_world);
 
 
-    new block(10.0f,0.1f,-48.0f,20.0f,1.f,-60,m_world,0);
-    new block(1.0f,1.0f,-35.0f,4.5f,0.05f,0,m_world,1);
+    new block(10.0f,0.1f,-48.0f,20.0f,-60,m_world,0,1.0f,1.f);
+    new block(1.0f,1.0f,-35.0f,4.5f,0,m_world,1,1.0f,0.05f);
 
 
     //The see-saw system at the bottom
@@ -356,7 +404,7 @@ dominos_t::dominos_t()
 
     new revolving_platform(0.0f,0.0f,-10.0f,10.0f,1.0f,m_world);
     new sphere(1.0f,5.f,0.0f,0.1f,4.0f,27.2f,1,m_world);
-    new sphere(1.0f,5.f,0.0f,0.1f,4.0f,25.2f,0,m_world);
+    //new sphere(1.0f,5.f,0.0f,0.1f,4.0f,25.2f,0,m_world);
 
     //Dominos
 
@@ -366,7 +414,7 @@ dominos_t::dominos_t()
     dominoes_and_block_y=5.0f;
 
     new dominoes(1.0f,0.1f,10.0f+dominoes_and_block_x,10.0f+dominoes_and_block_y,1.0f,20.0f,0.1f,9,m_world);
-    new block(6.0f,0.1f,14.5f+dominoes_and_block_x,10.0f+dominoes_and_block_y,1.f,0,m_world,0);
+    new block(6.0f,0.1f,14.5f+dominoes_and_block_x,10.0f+dominoes_and_block_y,0,m_world,0,1.0f,1.f);
     //new block(1.0f,1.0f,19.5f+dominoes_and_block_x,10.1f+dominoes_and_block_y,1.f,0,m_world,1);
     new sphere(1.0f,1.0f,0.5f,0.0f,19.5f+dominoes_and_block_x,10.1f+dominoes_and_block_y,1,m_world);
 
@@ -375,10 +423,54 @@ dominos_t::dominos_t()
     new revolving_platform(-2.0f,2.0f,-30.6f,-5.0f,100.0f,m_world);
     new revolving_platform(-2.0f,2.0f,-30.9f,-1.0f,100.0f,m_world);
 
-        new block(5.0f,0.2f,-1.7f,10.5f,0.05f,-45,m_world,0, 1.0f  );
-  //  new sphere(1.0f,-1.7f,0.1f,4.0f,25.2f,0,m_world);
+    new block(5.0f,0.2f,-1.7f,10.5f,-45,m_world,0, 1.0f,0.05f);
+    //  new sphere(1.0f,-1.7f,0.1f,4.0f,25.2f,0,m_world);
 
-new revolving_platform(1.0f,0.0f,-9.6f,-11.0f,10.0f,m_world);
+
+    new revolving_platform(3.0f,0.0f,4.0f,20.0f,10.0f,m_world);
+    new sphere(1.0f,5.f,0.0f,0.1f,18.0f,37.2f,1,m_world);
+
+    new revolving_platform(3.0f,0.0f,13.0f,19.5f,10.0f,m_world);
+    new sphere(1.0f,5.f,0.0f,0.1f,27.0f,36.7f,1,m_world);
+
+    new revolving_platform(3.0f,0.0f,22.0f,20.0f,10.0f,m_world);
+    new sphere(1.0f,5.f,0.0f,0.1f,36.0f,37.2f,1,m_world);
+    new revolving_platform(3.0f,0.0f,31.0f,19.5f,10.0f,m_world);
+    new sphere(1.0f,5.f,0.0f,0.1f,45.0f,36.7f,1,m_world);
+
+
+
+    new revolving_platform(1.0f,0.0f,-9.6f,-11.0f,10.0f,m_world);
+    new sphere(1.0f,5.f,0.0f,0.1f,4.4f,4.2f,0,m_world);
+
+{
+
+      //The revolving Launcher
+
+      float x=5.0f;
+      float y=4.0f;
+      float l=4.0f;
+b=new block(l,0.2f,x,y,0,m_world,1);
+b2Body* b1=b->body;
+b=new block(0.01f,0.01f,x,y,0,m_world,0);
+b2Body* b2=b->body;
+r=new rev_j(b2,b1,x, y,m_world,0);
+
+   b=new block(2.0f,0.2f,x+l+3.2f,y-1.6f,45,m_world,1);
+  b2Body* b3=b->body;
+  b=new block(2.0f,0.2f,x+l+1.2f,y-1.6f,-45,m_world,1);
+b2Body* b4=b->body;
+w=new weld(b1,b4,x+l, y,m_world);
+w=new weld(b3,b4,x+l+2.0f, y-3.0f,m_world);
+
+
+ b=new block(2.0f,0.2f,x-l-3.2f,y-1.6f,-45,m_world,1);
+  b2Body* b5=b->body;
+  b=new block(2.0f,0.2f,x-l-1.2f,y-1.6f,45,m_world,1);
+b2Body* b6=b->body;
+w=new weld(b1,b6,x-l, y,m_world);
+w=new weld(b5,b6,x-l-2.0f, y-3.0f,m_world);
+    }
 
 
 }
