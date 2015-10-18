@@ -452,37 +452,33 @@ sphere* s;
       //The revolving Launcher
     {
 
-      b2PolygonShape shape;
-      shape.SetAsBox(7.2f, 0.2f);
-  
-      b2BodyDef bd;
-      //bd.angle = 60; //set the starting angle
-      bd.position.Set(14.0f, 4.0f);
-      bd.type = b2_dynamicBody;
-      b2Body* body = m_world->CreateBody(&bd);
-      b2FixtureDef *fd = new b2FixtureDef;
-      fd->density = 1.f;
-      fd->shape = new b2PolygonShape;
-      fd->shape = &shape;
-      body->CreateFixture(fd);
+      //The revolving Launcher
 
-      b2PolygonShape shape2;
-      shape2.SetAsBox(7.2f, 2.0f);
-      b2BodyDef bd2;
-      //bd2.angle = 160; //set the starting angle
-      bd2.position.Set(14.0f, 6.0f);
-      b2Body* body2 = m_world->CreateBody(&bd2);
-
-      b2RevoluteJointDef jointDef;
-      jointDef.bodyA = body;
-      jointDef.bodyB = body2;
-      jointDef.localAnchorA.Set(0,0);
-      jointDef.localAnchorB.Set(0,0);
-      jointDef.collideConnected = false;
-      m_world->CreateJoint(&jointDef);
+      float x=14.0f;
+      float y=14.0f;
+      float l=4.0f;
+b=new block(l,0.2f,x,y,0,m_world,1);
+b2Body* b1=b->body;
+b=new block(0.01f,0.01f,x,y,0,m_world,0);
+b2Body* b2=b->body;
+r=new rev_j(b2,b1,x, y,m_world,0);
     
-  b=new block(2.0f,0.2f,24.4f,2.4f,45,m_world,1);
-  b=new block(2.0f,0.2f,22.4f,2.4f,-45,m_world,1);
+   b=new block(2.0f,0.2f,x+l+3.2f,y-1.6f,45,m_world,1);
+  b2Body* b3=b->body;
+  b=new block(2.0f,0.2f,x+l+1.2f,y-1.6f,-45,m_world,1);
+b2Body* b4=b->body;
+w=new weld(b1,b4,x+l, y,m_world);
+w=new weld(b3,b4,x+l+2.0f, y-3.0f,m_world);
+
+
+ b=new block(2.0f,0.2f,x-l-3.2f,y-1.6f,-45,m_world,1);
+  b2Body* b5=b->body;
+  b=new block(2.0f,0.2f,x-l-1.2f,y-1.6f,45,m_world,1);
+b2Body* b6=b->body;
+w=new weld(b1,b6,x-l, y,m_world);
+w=new weld(b5,b6,x-l-2.0f, y-3.0f,m_world);
+
+
 
 
     }
