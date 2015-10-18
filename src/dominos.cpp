@@ -126,9 +126,14 @@ public:
         ballbd.position.Set(x,y);
         sbody = m_world->CreateBody(&ballbd);
         sbody->CreateFixture(&ballfd);
-        if(!gravity)
+        if(gravity==0)
         {
             sbody->SetGravityScale(-0.3);
+        }
+        else{
+            if(gravity==2){
+            sbody->SetGravityScale(0.3);
+            }
         }
     }
 };
@@ -162,6 +167,7 @@ public:
         fd->shape = new b2PolygonShape;
         fd->shape = &shape;
         fd->friction = friction;
+        fd->restitution = 0.0f;
         body->CreateFixture(fd);
 
     }
@@ -217,7 +223,7 @@ public:
         box1->CreateFixture(fd3);
 
         //The bar
-        bd->position.Set(10+x,15+y);
+        bd->position.Set(11+x,15+y);
         fd1->density = r_density;///default 34.0f
         b2Body* box2 = m_world->CreateBody(bd);
         box2->CreateFixture(fd1);
@@ -225,9 +231,9 @@ public:
         // The pulley joint
         b2PulleyJointDef* myjoint = new b2PulleyJointDef();
         b2Vec2 worldAnchorOnBody1(-10, 15); // Anchor point on body 1 in world axis
-        b2Vec2 worldAnchorOnBody2(10, 15); // Anchor point on body 2 in world axis
+        b2Vec2 worldAnchorOnBody2(11, 15); // Anchor point on body 2 in world axis
         b2Vec2 worldAnchorGround1(-10+x, 20+y); // Anchor point for ground 1 in world axis
-        b2Vec2 worldAnchorGround2(10+x, 20+y); // Anchor point for ground 2 in world axis
+        b2Vec2 worldAnchorGround2(11+x, 20+y); // Anchor point for ground 2 in world axis
         float32 ratio = 1.0f; // Define ratio
         myjoint->Initialize(box1, box2, worldAnchorGround1+shift, worldAnchorGround2+shift, box1->GetWorldCenter(), box2->GetWorldCenter(), ratio);
         m_world->CreateJoint(myjoint);
@@ -359,6 +365,46 @@ public:
 
 
 
+class pulley_j{
+// The pulley joint
+     public:
+pulley_j(b2Body* box1,b2Body* box2,float b1x,float b1y,float b2x,float b2y,float g1x,float g1y,float g2x,float g2y,b2World* m_world){
+
+      b2PulleyJointDef* myjoint = new b2PulleyJointDef();
+      b2Vec2 worldAnchorOnBody1(b1x, b1y); // Anchor point on body 1 in world axis
+      b2Vec2 worldAnchorOnBody2(b2x, b2y); // Anchor point on body 2 in world axis
+      b2Vec2 worldAnchorGround1(g1x, g1y); // Anchor point for ground 1 in world axis
+      b2Vec2 worldAnchorGround2(g2x, g2y); // Anchor point for ground 2 in world axis
+      float32 ratio = 1.0f; // Define ratio
+      myjoint->Initialize(box1, box2, worldAnchorGround1, worldAnchorGround2, box1->GetWorldCenter(), box2->GetWorldCenter(), ratio);
+      m_world->CreateJoint(myjoint);
+
+}
+
+};
+
+
+
+class open_box{
+public:
+  b2Body* box1;
+open_box(float x,float y, float l_density, float r_density, b2World *m_world)
+    {
+block* b1=new block(2.0f,0.2f,0.0f+x,-1.9f+y,0,m_world,1,1.0f,0.5f);
+block* b2=new block(0.2f,2.0f,2.0f+x,y,0, m_world,1,1.0f,0.5f);
+block* b3=new block(0.2f,2.0f,-2.0f+x,y,0,m_world,1,1.0f,0.5f);
+b1->body->SetFixedRotation(true);
+weld* w=new weld(b1->body,b2->body,x+2.0f, y-1.9f,m_world);
+w=new weld(b3->body,b1->body,x-2.0f, y-1.9f,m_world);
+box1=b1->body;
+    }
+};
+
+
+
+
+
+
 block* b;
 weld* w;
 rev_j* r;
@@ -402,8 +448,8 @@ dominos_t::dominos_t()
 
     //The revolving horizontal platform
 
-    new revolving_platform(0.0f,0.0f,-10.0f,10.0f,1.0f,m_world);
-    new sphere(1.0f,5.f,0.0f,0.1f,4.0f,27.2f,1,m_world);
+    new revolving_platform(0.8f,0.0f,-8.5f,10.0f,1.0f,m_world);
+    new sphere(1.0f,10.0f,0.0f,0.1f,5.5f,27.2f,1,m_world);
     //new sphere(1.0f,5.f,0.0f,0.1f,4.0f,25.2f,0,m_world);
 
     //Dominos
@@ -416,14 +462,14 @@ dominos_t::dominos_t()
     new dominoes(1.0f,0.1f,10.0f+dominoes_and_block_x,10.0f+dominoes_and_block_y,1.0f,20.0f,0.1f,9,m_world);
     new block(6.0f,0.1f,14.5f+dominoes_and_block_x,10.0f+dominoes_and_block_y,0,m_world,0,1.0f,1.f);
     //new block(1.0f,1.0f,19.5f+dominoes_and_block_x,10.1f+dominoes_and_block_y,1.f,0,m_world,1);
-    new sphere(1.0f,1.0f,0.5f,0.0f,19.5f+dominoes_and_block_x,10.1f+dominoes_and_block_y,1,m_world);
+    new sphere(1.0f,0.4f,0.5f,0.0f,19.5f+dominoes_and_block_x,10.1f+dominoes_and_block_y,1,m_world);
 
     new revolving_platform(-2.0f,2.0f,-30.6f,-13.0f,100.0f,m_world);
     new revolving_platform(-2.0f,2.0f,-30.9f,-9.0f,100.0f,m_world);
     new revolving_platform(-2.0f,2.0f,-30.6f,-5.0f,100.0f,m_world);
     new revolving_platform(-2.0f,2.0f,-30.9f,-1.0f,100.0f,m_world);
 
-    new block(5.0f,0.2f,-1.7f,10.5f,-45,m_world,0, 1.0f,0.05f);
+    //new block(5.0f,0.2f,-1.7f,10.5f,-45,m_world,0, 1.0f,0.05f);
     //  new sphere(1.0f,-1.7f,0.1f,4.0f,25.2f,0,m_world);
 
 
@@ -431,9 +477,9 @@ dominos_t::dominos_t()
 
       //The revolving Launcher
 
-      float x=5.0f;
-      float y=4.0f;
-      float l=4.0f;
+      float x=4.4f;
+      float y=14.0f;
+      float l=3.8f;
 b=new block(l,0.2f,x,y,0,m_world,1);
 b2Body* b1=b->body;
 b=new block(0.01f,0.01f,x,y,0,m_world,0);
@@ -469,6 +515,36 @@ w=new weld(b5,b6,x-l-2.0f, y-3.0f,m_world);
     new sphere(1.0f,5.f,0.0f,0.1f,45.0f,36.7f,1,m_world);
 
 
+
+
+/*
+//The pulley system
+    {
+      float x=10.0f;
+      float y=17.0f;
+     float x1=30.0f;
+      float y1=5.0f;
+      float x2=34.0f;
+      float y2=6.0f;
+
+
+open_box* ob=new open_box(x,y,10,10,m_world);
+
+b=new block(4.0f,0.2f,x+x1,y+y1,0,m_world,0);
+b2Body* b1=b->body;
+
+b=new block(5.0f,0.2f,x+x2,y+y2,0,m_world,1,10);
+b2Body* b2=b->body;
+      // The pulley joint
+pulley_j* pj=new pulley_j(ob->box1,b2,x,y,x+x2,y+y2-1,x, y+5.0f,x+10.0f, y+5.0f,m_world);
+
+
+//test
+//b=new block(5.0f,0.2f,x,y+5.0f,0,m_world,1,10);
+
+}
+
+*/
 
 
 
