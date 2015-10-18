@@ -73,6 +73,36 @@ public:
   }
 };
 
+class sphere
+{
+
+
+public:
+
+    sphere(float radius,float density,float friction, float restitution, float x, float y,bool gravity, b2World* m_world,int s_d=1)
+    {
+        b2Body* sbody;
+        b2CircleShape circle;
+        circle.m_radius = radius;
+
+        b2FixtureDef ballfd;
+        ballfd.shape = &circle;
+        ballfd.density = density;
+        ballfd.friction = friction;
+        ballfd.restitution = restitution;
+        b2BodyDef ballbd;
+        ballbd.type = b2_dynamicBody;
+        if(s_d==0)ballbd.type = b2_staticBody; 
+        ballbd.position.Set(x,y);
+        sbody = m_world->CreateBody(&ballbd);
+        sbody->CreateFixture(&ballfd);
+        if(!gravity)
+        {
+            sbody->SetGravityScale(-1);
+        }
+    }
+};
+
 
 class weld{
 public:
@@ -97,8 +127,8 @@ b2RevoluteJointDef jd;
 
 if(mot!=0){
 jd.enableMotor = true;
-jd.motorSpeed = -2;
-jd.maxMotorTorque = 10;
+jd.motorSpeed = mot;
+jd.maxMotorTorque = 1000;
 }
       b2Vec2 anchor;
       anchor.Set(x, y);
@@ -112,6 +142,7 @@ jd.maxMotorTorque = 10;
 block* b;
 weld* w;
 rev_j* r;
+sphere* s;
     //Ground
     /*! \var b1 
      * \brief pointer to the body ground 
@@ -519,9 +550,9 @@ b2Body* b4=b->body;
 
 w=new weld(b1,b2,x, y,m_world);
 w=new weld(b2,b3,x, y,m_world);
-r=new rev_j(b4,b3,x, y,m_world,1);
-r=new rev_j(b4,b2,x, y,m_world,1);
-r=new rev_j(b4,b1,x, y,m_world,1);
+r=new rev_j(b4,b3,x, y,m_world,-1);
+r=new rev_j(b4,b2,x, y,m_world,-1);
+r=new rev_j(b4,b1,x, y,m_world,-1);
 
 //test
 //b=new block(0.5f,0.5f,x+2.2f,y+5.0f,0,m_world,1);
@@ -529,6 +560,32 @@ r=new rev_j(b4,b1,x, y,m_world,1);
 
 //w=new weld(b6,b5,x, y-10.0f,m_world);
 
+
+}
+
+
+{
+
+//the Clock
+float x=-15.0f;
+float y=40.0f;
+float radius=0.2f;
+//the handle
+b=new block(2.0f,0.1f,x,y,0,m_world,1);
+b2Body* b1=b->body;
+//the center
+b=new block(0.001f,0.001f,x-2.0f,y,0,m_world,0);
+b2Body* b2=b->body;
+r=new rev_j(b1,b2,x-2.0f, y,m_world,1);
+//the calibration
+s=new sphere(radius,0.0f,0.0f,0.0f,x-2.0f,y+4.4f,0,m_world,0);
+s=new sphere(radius,0.0f,0.0f,0.0f,x-2.0f,y-4.4f,0,m_world,0);
+s=new sphere(radius,0.0f,0.0f,0.0f,x+2.2f,y,0,m_world,0);
+s=new sphere(radius,0.0f,0.0f,0.0f,x-6.2f,y,0,m_world,0);
+s=new sphere(radius,0.0f,0.0f,0.0f,x+1.0f,y+3.0f,0,m_world,0);
+s=new sphere(radius,0.0f,0.0f,0.0f,x-5.0f,y+3.0f,0,m_world,0);
+s=new sphere(radius,0.0f,0.0f,0.0f,x+1.0f,y-3.0f,0,m_world,0);
+s=new sphere(radius,0.0f,0.0f,0.0f,x-5.0f,y-3.0f,0,m_world,0);
 
 }
 
