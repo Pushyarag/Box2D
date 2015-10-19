@@ -710,18 +710,18 @@ r=new rev_j(b4,b1,x, y,m_world,-1);
     {
       float x=10.0f+rp_shiftx+45.3;
       float y=17.0f;
-     float x1=26.0f;
+     float x1=24.0f;
       float y1=6.0f;
-      float x2=30.0f;
+      float x2=27.0f;
       float y2=7.0f;
 
 
 open_box* ob=new open_box(x,y-2.0f,10,10,m_world);
 
-b=new block(8.0f,0.2f,x+x1,y+y1,0,m_world,0);
+b=new block(6.0f,0.2f,x+x1,y+y1,0,m_world,0);
 b2Body* b1=b->body;
 
-b=new block(9.0f,0.2f,x+x2,y+y2,0,m_world,1,90);
+b=new block(5.0f,0.2f,x+x2,y+y2,0,m_world,1,1000);
 b2Body* b2=b->body;
       // The pulley joint
 pulley_j* pj=new pulley_j(ob->box1,b2,x,y,x+x2,y+y2-1,x, y+5.0f,x+10.0f, y+5.0f,m_world);
@@ -731,7 +731,7 @@ pulley_j* pj=new pulley_j(ob->box1,b2,x,y,x+x2,y+y2-1,x, y+5.0f,x+10.0f, y+5.0f,
 //b=new block(5.0f,0.2f,x,y+5.0f,0,m_world,1,10);
 
 }
-Bucket_Water* bw=new Bucket_Water(105.0f,23.0f,m_world);
+Bucket_Water* bw=new Bucket_Water(99.0f,23.0f,m_world);
 
 
 
