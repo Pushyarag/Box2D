@@ -70,6 +70,7 @@ setup:
 	@$(ECHO) "Setting up compilation..."
 	@mkdir -p obj
 	@mkdir -p bin
+	
 
 $(BINDIR)/$(TARGET): $(OBJS)
 	@$(PRINTF) "$(MESG_COLOR)Building executable:$(NO_COLOR) $(FILE_COLOR) %16s$(NO_COLOR)" "$(notdir $@)"
@@ -111,12 +112,13 @@ clean:
 	@$(ECHO) " cleaning Done"
 
 distclean: clean
-	@$(RM) -rf $(BINDIR) $(DOCDIR)/html
+	@$(RM) -rf $(BINDIR) $(DOCDIR)/html profile
 	@$(ECHO) ""
 	@$(ECHO) " directory clean Done"
 
 
 profile: setup $(BINDIR)/$(TARGET)
+	@mkdir -p profile
 	@$(ECHO) ""
 	@$(ECHO) "Profiling using gprof ..."
 	@cd profile && ../bin/cs251_base 
