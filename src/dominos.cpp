@@ -829,6 +829,9 @@ Bucket_Water* bw=new Bucket_Water(89.0f+rp_shiftx,23.0f,m_world);
 //new CircleQuarter(5,5,5,m_world,90);
 
 
+new block(20.0f,0.0f,rp_shiftx+80,10,0,m_world,0,1.0f,1.0f);
+new block(0.0f,8.0f,rp_shiftx+100.5f,8.0f,0,m_world,0,0.0f,1.0f);
+
 
 }
 
