@@ -107,12 +107,12 @@ jd.maxMotorTorque = 1000;
 class sphere
 {
 
-
 public:
 
     sphere(float radius,float density,float friction, float restitution, float x, float y,bool gravity, b2World* m_world)
     {
-        b2Body* sbody;
+
+ b2Body* sbody;
         b2CircleShape circle;
         circle.m_radius = radius;
 
@@ -401,7 +401,68 @@ box1=b1->body;
 };
 
 
+class newtons_pendulum{
+public:
+newtons_pendulum(float x, float y, float radius,float density,float friction, float restitution, int n, float l, b2World * m_world){
 
+//The pendulum that knocks the dominos off
+for(int i=0;i<n;i++){
+      b2Body* b2;
+      {
+	b2PolygonShape shape;
+	shape.SetAsBox(0.25f, 1.5f);
+
+	b2BodyDef bd;
+	bd.position.Set(x, y-5.0f);
+	b2 = m_world->CreateBody(&bd);
+	b2->CreateFixture(&shape, 10.0f);
+      }
+/*
+      b2Body* b4;
+      {
+	b2PolygonShape shape;
+	shape.SetAsBox(0.5f, 0.25f);
+
+	b2BodyDef bd;
+	bd.type = b2_dynamicBody;
+	bd.position.Set(-40.0f, 33.0f);
+	b4 = m_world->CreateBody(&bd);
+	b4->CreateFixture(&shape, 2.0f);
+      }
+*/
+
+ b2Body* sbody;
+        b2CircleShape circle;
+        circle.m_radius = radius;
+
+        b2FixtureDef ballfd;
+        ballfd.shape = &circle;
+        ballfd.density = density;
+        ballfd.friction = friction;
+        ballfd.restitution = restitution;
+        b2BodyDef ballbd;
+        ballbd.type = b2_dynamicBody;
+        ballbd.position.Set(x,y);
+        sbody = m_world->CreateBody(&ballbd);
+        sbody->CreateFixture(&ballfd);
+    //new sphere(1.0f,0.4f,0.5f,0.0f,19.5f+dominoes_and_block_x,10.1f+dominoes_and_block_y,1,m_world);
+      b2RevoluteJointDef jd;
+      b2Vec2 anchor;
+      anchor.Set(x, y+5.0f);
+      jd.Initialize(b2, sbody, anchor);
+      m_world->CreateJoint(&jd);
+
+      x=x+2*radius+0.001f;
+
+}
+
+
+
+}
+
+
+
+};
 
 
 
@@ -462,16 +523,21 @@ dominos_t::dominos_t()
     new dominoes(1.0f,0.1f,10.0f+dominoes_and_block_x,10.0f+dominoes_and_block_y,1.0f,20.0f,0.1f,9,m_world);
     new block(6.0f,0.1f,14.5f+dominoes_and_block_x,10.0f+dominoes_and_block_y,0,m_world,0,1.0f,1.f);
     //new block(1.0f,1.0f,19.5f+dominoes_and_block_x,10.1f+dominoes_and_block_y,1.f,0,m_world,1);
-    new sphere(1.0f,0.4f,0.5f,0.0f,19.5f+dominoes_and_block_x,10.1f+dominoes_and_block_y,1,m_world);
+    new sphere(1.0f,2.0f,0.0f,0.0f,19.5f+dominoes_and_block_x,10.1f+dominoes_and_block_y,1,m_world);
 
     new revolving_platform(-2.0f,2.0f,-30.6f,-13.0f,100.0f,m_world);
     new revolving_platform(-2.0f,2.0f,-30.9f,-9.0f,100.0f,m_world);
     new revolving_platform(-2.0f,2.0f,-30.6f,-5.0f,100.0f,m_world);
     new revolving_platform(-2.0f,2.0f,-30.9f,-1.0f,100.0f,m_world);
 
-    //new block(5.0f,0.2f,-1.7f,10.5f,-45,m_world,0, 1.0f,0.05f);
-    //  new sphere(1.0f,-1.7f,0.1f,4.0f,25.2f,0,m_world);
+    new block(5.0f,0.2f,-1.7f,10.5f,-45,m_world,0, 1.0f,0.05f);
+        new block(15.0f,0.2f,3.7f,6.5f,0,m_world,0, 1.0f,0.05f);
+         new sphere(1.0f,1.0f,0.0f,1.0f,5.0f,7.7f,1,m_world);
 
+//new newtons_pendulum(11.7f,7.8f,1.0f,1.0f,0.0f,1.0f,10,0.0f,m_world);
+
+    //  new sphere(1.0f,-1.7f,0.1f,4.0f,25.2f,0,m_world);
+/*
 
 {
 
@@ -501,27 +567,79 @@ b2Body* b6=b->body;
 w=new weld(b1,b6,x-l, y,m_world);
 w=new weld(b5,b6,x-l-2.0f, y-3.0f,m_world);
     }
+*/
+float ballonx = 25.0f;
+float ballony  = 3.0f;
+new sphere(1.0f,5.f,0.0f,0.1f,ballonx,ballony,0,m_world);
+ float rp_shiftx =  10.0f;
+
+    new revolving_platform(3.0f,0.0f,4.0f+rp_shiftx,20.0f,10.0f,m_world);
+    new sphere(1.0f,5.f,100.0f,0.01f,18.0f+rp_shiftx,37.2f,1,m_world);
+
+    new revolving_platform(3.0f,0.0f,13.0f+rp_shiftx,19.5f,10.0f,m_world);
+    new sphere(1.0f,5.f,100.0f,0.01f,27.0f+rp_shiftx,36.7f,1,m_world);
+
+    new revolving_platform(3.0f,0.0f,22.0f+rp_shiftx,20.0f,10.0f,m_world);
+    new sphere(1.0f,5.f,100.0f,0.01f,36.0f+rp_shiftx,37.2f,1,m_world);
+    new revolving_platform(3.0f,0.0f,31.0f+rp_shiftx,19.5f,10.0f,m_world);
+    new sphere(1.0f,5.f,100.0f,0.01f,45.0f+rp_shiftx,36.7f,1,m_world);
 
 
-    new revolving_platform(3.0f,0.0f,4.0f,20.0f,10.0f,m_world);
-    new sphere(1.0f,5.f,0.0f,0.1f,18.0f,37.2f,1,m_world);
-
-    new revolving_platform(3.0f,0.0f,13.0f,19.5f,10.0f,m_world);
-    new sphere(1.0f,5.f,0.0f,0.1f,27.0f,36.7f,1,m_world);
-
-    new revolving_platform(3.0f,0.0f,22.0f,20.0f,10.0f,m_world);
-    new sphere(1.0f,5.f,0.0f,0.1f,36.0f,37.2f,1,m_world);
-    new revolving_platform(3.0f,0.0f,31.0f,19.5f,10.0f,m_world);
-    new sphere(1.0f,5.f,0.0f,0.1f,45.0f,36.7f,1,m_world);
+    new block(15.0f,0.2f,32.0f+rp_shiftx,15.5f,-60,m_world,0, 1.0f,0.05f);
 
 
 
 
-/*
+{
+//the pulley motor
+  float x=50.0f+rp_shiftx;
+float y=10.0f;
+b=new block(3.0f,0.1f,x,y,0,m_world,1);
+b2Body* b1=b->body;
+b=new block(3.0f,0.1f,x,y,45,m_world,1);
+b2Body* b2=b->body;
+b=new block(3.0f,0.1f,x,y,90,m_world,1);
+b2Body* b3=b->body;
+b=new block(0.001f,0.001f,x,y,0,m_world,0);
+b2Body* b4=b->body;
+//b=new block(3.0f,0.2f,x,y,5,m_world,0);
+
+//the pendulum
+//b=new block(0.2f,5.2f,x,y-5.0f,0,m_world,1);
+//b2Body* b5=b->body;
+//b->bd.position.Set(0.0f, -52.0f);
+
+// //the bob b6
+// b=new block(0.5f,0.5f,x-6.0f,y-10.0f,0,m_world,1,80.0f);
+// b2Body* b6=b->body;
+//  b6->SetGravityScale(90);
+// w=new weld(b2,b6,x, y,m_world);
+// r=new rev_j(b6,b3,x, y,m_world);
+
+
+w=new weld(b1,b2,x, y,m_world);
+w=new weld(b2,b3,x, y,m_world);
+r=new rev_j(b4,b3,x, y,m_world,-1);
+r=new rev_j(b4,b2,x, y,m_world,-1);
+r=new rev_j(b4,b1,x, y,m_world,-1);
+
+//test
+//b=new block(0.5f,0.5f,x+2.2f,y+5.0f,0,m_world,1);
+//b2Body* b7=b->body;
+
+//w=new weld(b6,b5,x, y-10.0f,m_world);
+
+
+}
+
+
+
+
+
 //The pulley system
     {
-      float x=10.0f;
-      float y=17.0f;
+      float x=10.0f+rp_shiftx+45.3;
+      float y=7.0f;
      float x1=30.0f;
       float y1=5.0f;
       float x2=34.0f;
@@ -544,7 +662,6 @@ pulley_j* pj=new pulley_j(ob->box1,b2,x,y,x+x2,y+y2-1,x, y+5.0f,x+10.0f, y+5.0f,
 
 }
 
-*/
 
 
 
