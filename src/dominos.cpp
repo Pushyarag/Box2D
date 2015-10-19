@@ -26,6 +26,11 @@
 #include "cs251_base.hpp"
 #include "render.hpp"
 
+
+#include <cmath>
+#define PI 3.14159265
+
+
 #ifdef __APPLE__
 #include <GLUT/glut.h>
 #else
@@ -176,6 +181,26 @@ public:
 
     }
 };
+
+
+
+
+
+class CircleQuarter{
+public:
+CircleQuarter(float x, float y, float radius, b2World * m_world, int angle){
+
+for (int i=-90 ; i <= angle-90; i++) {
+
+new block( 0.100f,0.00f,x+radius*cos( i * PI / 180.0),y+radius*sin( i * PI / 180.0),-i, m_world,0,1.0f,1.0f);
+}
+}
+};
+
+
+
+
+
 
 /*!  pulley object
        * \brief This is the class to create pulleys
@@ -373,7 +398,7 @@ public:
 
 
 /*!  pulley_joint object
-       * \brief the class to create a pulley with 2 given bodies 
+       * \brief the class to create a pulley with 2 given bodies
        */
 class pulley_j{
 // The pulley joint
@@ -732,6 +757,9 @@ pulley_j* pj=new pulley_j(ob->box1,b2,x,y,x+x2,y+y2-1,x, y+5.0f,x+10.0f, y+5.0f,
 
 }
 Bucket_Water* bw=new Bucket_Water(105.0f,23.0f,m_world);
+
+
+new CircleQuarter(5,5,5,m_world,90);
 
 
 
