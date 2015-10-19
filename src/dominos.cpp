@@ -53,7 +53,7 @@ public:
   b2Body* body;
   b2BodyDef bd;
 
-  block(float h,float w,float x,float y,int a, b2World* m_world,int s_d=1,float  den=1.0f){
+  block(float h,float w,float x,float y,int a, b2World* m_world,int s_d=1,float  den=1.0f,float friction=0.0f){
 
     b2PolygonShape shape;
       shape.SetAsBox(h, w);
@@ -72,6 +72,9 @@ public:
 
   }
 };
+
+
+
 
 class sphere
 {
@@ -135,6 +138,43 @@ jd.maxMotorTorque = 1000;
       jd.Initialize(b1, b2, anchor);
       m_world->CreateJoint(&jd);
  }
+};
+
+class pulley_j{
+// The pulley joint
+     public:
+pulley_j(b2Body* box1,b2Body* box2,float b1x,float b1y,float b2x,float b2y,float g1x,float g1y,float g2x,float g2y,b2World* m_world){
+ 
+      b2PulleyJointDef* myjoint = new b2PulleyJointDef();
+      b2Vec2 worldAnchorOnBody1(b1x, b1y); // Anchor point on body 1 in world axis
+      b2Vec2 worldAnchorOnBody2(b2x, b2y); // Anchor point on body 2 in world axis
+      b2Vec2 worldAnchorGround1(g1x, g1y); // Anchor point for ground 1 in world axis
+      b2Vec2 worldAnchorGround2(g2x, g2y); // Anchor point for ground 2 in world axis
+      float32 ratio = 1.0f; // Define ratio
+      myjoint->Initialize(box1, box2, worldAnchorGround1, worldAnchorGround2, box1->GetWorldCenter(), box2->GetWorldCenter(), ratio);
+      m_world->CreateJoint(myjoint);
+
+}
+
+};
+
+
+
+
+
+class open_box{ 
+public:
+  b2Body* box1;
+open_box(float x,float y, float l_density, float r_density, b2World *m_world)
+    { 
+block* b1=new block(2.0f,0.2f,0.0f+x,-1.9f+y,0,m_world,1,1.0f,0.5f);
+block* b2=new block(0.2f,2.0f,2.0f+x,y,0, m_world,1,1.0f,0.5f);
+block* b3=new block(0.2f,2.0f,-2.0f+x,y,0,m_world,1,1.0f,0.5f);
+b1->body->SetFixedRotation(true);
+weld* w=new weld(b1->body,b2->body,x+2.0f, y-1.9f,m_world);
+w=new weld(b3->body,b1->body,x-2.0f, y-1.9f,m_world);
+box1=b1->body;
+    }
 };
 
 
@@ -295,58 +335,30 @@ sphere* s;
 
     //The pulley system
     {
-      b2BodyDef *bd = new b2BodyDef;
-      bd->type = b2_dynamicBody;
-      bd->position.Set(-10,15);
-      bd->fixedRotation = true;
-      
-      //The open box
-      b2FixtureDef *fd1 = new b2FixtureDef;
-      fd1->density = 10.0;
-      fd1->friction = 0.5;
-      fd1->restitution = 0.f;
-      fd1->shape = new b2PolygonShape;
-      b2PolygonShape bs1;
-      bs1.SetAsBox(2,0.2, b2Vec2(0.f,-1.9f), 0);
-      fd1->shape = &bs1;
-      b2FixtureDef *fd2 = new b2FixtureDef;
-      fd2->density = 10.0;
-      fd2->friction = 0.5;
-      fd2->restitution = 0.f;
-      fd2->shape = new b2PolygonShape;
-      b2PolygonShape bs2;
-      bs2.SetAsBox(0.2,2, b2Vec2(2.0f,0.f), 0);
-      fd2->shape = &bs2;
-      b2FixtureDef *fd3 = new b2FixtureDef;
-      fd3->density = 10.0;
-      fd3->friction = 0.5;
-      fd3->restitution = 0.f;
-      fd3->shape = new b2PolygonShape;
-      b2PolygonShape bs3;
-      bs3.SetAsBox(0.2,2, b2Vec2(-2.0f,0.f), 45);
-      fd3->shape = &bs3;
-       
-      b2Body* box1 = m_world->CreateBody(bd);
-      box1->CreateFixture(fd1);
-      box1->CreateFixture(fd2);
-      box1->CreateFixture(fd3);
+      float x=-10.0f;
+      float y=25.0f;
+     float x1=30.0f;
+      float y1=5.0f;
+      float x2=34.0f;
+      float y2=6.0f;
+     
+     
+open_box* ob=new open_box(x,y,10,10,m_world);
+    
+b=new block(4.0f,0.2f,x+x1,y+y1,0,m_world,0);
+b2Body* b1=b->body;
 
-      //The bar
-      bd->position.Set(10,15);	
-      fd1->density = 34.0;	  
-      b2Body* box2 = m_world->CreateBody(bd);
-      box2->CreateFixture(fd1);
+b=new block(5.0f,0.2f,x+x2,y+y2,0,m_world,1,10);
+b2Body* b2=b->body;
+      // The pulley joint      
+pulley_j* pj=new pulley_j(ob->box1,b2,x,y,x+x2,y+y2-1,x, y+5.0f,x+10.0f, y+5.0f,m_world);
 
-      // The pulley joint
-      b2PulleyJointDef* myjoint = new b2PulleyJointDef();
-      b2Vec2 worldAnchorOnBody1(-10, 15); // Anchor point on body 1 in world axis
-      b2Vec2 worldAnchorOnBody2(10, 15); // Anchor point on body 2 in world axis
-      b2Vec2 worldAnchorGround1(-10, 20); // Anchor point for ground 1 in world axis
-      b2Vec2 worldAnchorGround2(10, 20); // Anchor point for ground 2 in world axis
-      float32 ratio = 1.0f; // Define ratio
-      myjoint->Initialize(box1, box2, worldAnchorGround1, worldAnchorGround2, box1->GetWorldCenter(), box2->GetWorldCenter(), ratio);
-      m_world->CreateJoint(myjoint);
-    }
+
+//test
+//b=new block(5.0f,0.2f,x,y+5.0f,0,m_world,1,10);
+
+}
+
 
     //The revolving horizontal platform
     {
@@ -449,12 +461,12 @@ sphere* s;
       fd3->shape = &shape2;
       body3->CreateFixture(fd3);
 
-      //The revolving Launcher
+     
     {
 
       //The revolving Launcher
 
-      float x=14.0f;
+      float x=-24.0f;
       float y=14.0f;
       float l=4.0f;
 b=new block(l,0.2f,x,y,0,m_world,1);
@@ -477,10 +489,6 @@ w=new weld(b3,b4,x+l+2.0f, y-3.0f,m_world);
 b2Body* b6=b->body;
 w=new weld(b1,b6,x-l, y,m_world);
 w=new weld(b5,b6,x-l-2.0f, y-3.0f,m_world);
-
-
-
-
     }
 
 {
@@ -558,6 +566,7 @@ r=new rev_j(b4,b1,x, y,m_world,-1);
 
 
 }
+
 
 
 {
