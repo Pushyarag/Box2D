@@ -764,7 +764,7 @@ pulley_j* pj=new pulley_j(ob->box1,b2,x,y,x+x2,y+y2-1,x, y+5.0f,x+10.0f, y+5.0f,
 //b=new block(5.0f,0.2f,x,y+5.0f,0,m_world,1,10);
 
 }
-Bucket_Water* bw=new Bucket_Water(99.0f,23.0f,m_world);
+Bucket_Water* bw=new Bucket_Water(89.0f+rp_shiftx,23.0f,m_world);
 
 
 //new CircleQuarter(5,5,5,m_world,90);
