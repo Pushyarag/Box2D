@@ -141,7 +141,7 @@ public:
         }
         else{
             if(gravity==2){
-            sbody->SetGravityScale(0.3);
+            sbody->SetGravityScale(2.3);
             }
         }
     }
@@ -188,11 +188,11 @@ public:
 
 class CircleQuarter{
 public:
-CircleQuarter(float x, float y, float radius, b2World * m_world, int angle){
+CircleQuarter(float x, float y, float radius, b2World * m_world, int start, int ends){
 
-for (int i=-90 ; i <= angle-90; i++) {
+for (int i=start ; i <= ends; i++) {
 
-new block( 0.100f,0.00f,x+radius*cos( i * PI / 180.0),y+radius*sin( i * PI / 180.0),-i, m_world,0,1.0f,1.0f);
+new block( 0.100f,0.00f,x+radius*cos( i * PI / 180.0),y+radius*sin( i * PI / 180.0),-i, m_world,0,0.0f,1.0f);
 }
 }
 };
@@ -252,7 +252,7 @@ public:
         box1->CreateFixture(fd3);
 
         //The bar
-        bd->position.Set(11+x,15+y);
+        bd->position.Set(20+x,15+y);
         fd1->density = r_density;///default 34.0f
         b2Body* box2 = m_world->CreateBody(bd);
         box2->CreateFixture(fd1);
@@ -260,9 +260,9 @@ public:
         // The pulley joint
         b2PulleyJointDef* myjoint = new b2PulleyJointDef();
         b2Vec2 worldAnchorOnBody1(-10, 15); // Anchor point on body 1 in world axis
-        b2Vec2 worldAnchorOnBody2(11, 15); // Anchor point on body 2 in world axis
+        b2Vec2 worldAnchorOnBody2(20, 15); // Anchor point on body 2 in world axis
         b2Vec2 worldAnchorGround1(-10+x, 20+y); // Anchor point for ground 1 in world axis
-        b2Vec2 worldAnchorGround2(11+x, 20+y); // Anchor point for ground 2 in world axis
+        b2Vec2 worldAnchorGround2(20+x, 20+y); // Anchor point for ground 2 in world axis
         float32 ratio = 1.0f; // Define ratio
         myjoint->Initialize(box1, box2, worldAnchorGround1+shift, worldAnchorGround2+shift, box1->GetWorldCenter(), box2->GetWorldCenter(), ratio);
         m_world->CreateJoint(myjoint);
@@ -384,7 +384,7 @@ public:
         fd.shape = &shape;
         fd.density = density;
         fd.friction = friction;
-
+        fd.restitution = 0.001f;
         for (int i = 0; i < n; ++i)
         {
             b2BodyDef bd;
@@ -604,8 +604,8 @@ dominos_t::dominos_t()
 
     //The revolving horizontal platform
 
-    new revolving_platform(0.8f,0.0f,-8.5f,10.0f,1.0f,m_world);
-    new sphere(1.0f,10.0f,0.0f,0.1f,5.5f,27.2f,1,m_world);
+    new revolving_platform(0.8f,0.0f,0.5f,10.0f,1.0f,m_world);
+    new sphere(1.0f,10.0f,0.0f,0.1f,14.5f,27.2f,2,m_world);
     //new sphere(1.0f,5.f,0.0f,0.1f,4.0f,25.2f,0,m_world);
 
     //Dominos
@@ -615,32 +615,40 @@ dominos_t::dominos_t()
     dominoes_and_block_x=-25.0f;
     dominoes_and_block_y=5.0f;
 
-    new dominoes(1.0f,0.1f,10.0f+dominoes_and_block_x,10.0f+dominoes_and_block_y,1.0f,20.0f,0.1f,9,m_world);
+    new dominoes(1.0f,0.1f,10.0f+dominoes_and_block_x,10.0f+dominoes_and_block_y,1.0f,100.0f,0.1f,9,m_world);
     new block(6.0f,0.1f,14.5f+dominoes_and_block_x,10.0f+dominoes_and_block_y,0,m_world,0,1.0f,1.f);
     //new block(1.0f,1.0f,19.5f+dominoes_and_block_x,10.1f+dominoes_and_block_y,1.f,0,m_world,1);
-    new sphere(1.0f,2.0f,0.0f,0.0f,19.5f+dominoes_and_block_x,10.1f+dominoes_and_block_y,1,m_world);
+new sphere(1.0f,10.0f,0.0f,0.0f,19.5f+dominoes_and_block_x,10.1f+dominoes_and_block_y,1,m_world);
 
     new revolving_platform(-2.0f,2.0f,-30.6f,-13.0f,100.0f,m_world);
     new revolving_platform(-2.0f,2.0f,-30.9f,-9.0f,100.0f,m_world);
     new revolving_platform(-2.0f,2.0f,-30.6f,-5.0f,100.0f,m_world);
     new revolving_platform(-2.0f,2.0f,-30.9f,-1.0f,100.0f,m_world);
 
-    new block(5.0f,0.2f,-1.7f,10.5f,-45,m_world,0, 1.0f,0.05f);
-        new block(15.0f,0.2f,3.7f,6.5f,0,m_world,0, 1.0f,0.05f);
-         new sphere(1.0f,1.0f,0.0f,1.0f,5.0f,7.7f,1,m_world);
+    //new block(3.0f,0.2f,-1.7f,10.5f,-45,m_world,0, 1.0f,0.05f);
+    new CircleQuarter(-5.0f,10.0f,5,m_world,0,90);
+        new CircleQuarter(-5.0f,10.0f,7.4,m_world,0,90);
+        new CircleQuarter(5.0f,10.0f,5,m_world,180,360);
+        new CircleQuarter(5.0f,10.0f,2.4,m_world,180,360);
+        new CircleQuarter(10.0f,10.0f,2.6,m_world,90,180);
+new block(5,0.0,15.0f,10.0f,0,m_world,0,0.0f,1.0f);
+
+
+       // new block(15.0f,0.2f,3.7f,6.5f,0,m_world,0, 1.0f,0.05f);
+        // new sphere(1.0f,1.0f,0.0f,1.0f,5.0f,7.7f,1,m_world);
 
 //new newtons_pendulum(11.7f,7.8f,1.0f,1.0f,0.0f,1.0f,10,0.0f,m_world);
 
     //  new sphere(1.0f,-1.7f,0.1f,4.0f,25.2f,0,m_world);
-/*
 
+/*
 {
 
       //The revolving Launcher
 
-      float x=4.4f;
-      float y=14.0f;
-      float l=3.8f;
+      float x=7.4f;
+      float y=10.0f;
+      float l=2.80f;
 b=new block(l,0.2f,x,y,0,m_world,1);
 b2Body* b1=b->body;
 b=new block(0.01f,0.01f,x,y,0,m_world,0);
@@ -661,12 +669,12 @@ w=new weld(b3,b4,x+l+2.0f, y-3.0f,m_world);
 b2Body* b6=b->body;
 w=new weld(b1,b6,x-l, y,m_world);
 w=new weld(b5,b6,x-l-2.0f, y-3.0f,m_world);
-    }
-*/
+    }*/
+
 float ballonx = 25.0f;
 float ballony  = 3.0f;
 new sphere(1.0f,5.f,0.0f,0.1f,ballonx,ballony,0,m_world);
- float rp_shiftx =  10.0f;
+ float rp_shiftx =  20.0f;
 
     new revolving_platform(3.0f,0.0f,4.0f+rp_shiftx,20.0f,10.0f,m_world);
     new sphere(1.0f,15.f,100.0f,0.01f,18.0f+rp_shiftx,37.2f,1,m_world);
@@ -759,7 +767,7 @@ pulley_j* pj=new pulley_j(ob->box1,b2,x,y,x+x2,y+y2-1,x, y+5.0f,x+10.0f, y+5.0f,
 Bucket_Water* bw=new Bucket_Water(99.0f,23.0f,m_world);
 
 
-new CircleQuarter(5,5,5,m_world,90);
+//new CircleQuarter(5,5,5,m_world,90);
 
 
 
