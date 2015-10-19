@@ -483,13 +483,14 @@ for(int i=0;i<n;i++){
         sbody = m_world->CreateBody(&ballbd);
         sbody->CreateFixture(&ballfd);
     //new sphere(1.0f,0.4f,0.5f,0.0f,19.5f+dominoes_and_block_x,10.1f+dominoes_and_block_y,1,m_world);
+    //sbody-> SetGravityScale(-1);
       b2RevoluteJointDef jd;
       b2Vec2 anchor;
       anchor.Set(x, y+5.0f);
       jd.Initialize(b2, sbody, anchor);
       m_world->CreateJoint(&jd);
 
-      x=x+2*radius+0.001f;
+      x=x+2*radius+0.01f;
 
 }
 
@@ -633,13 +634,29 @@ new sphere(1.0f,10.0f,0.0f,0.0f,19.5f+dominoes_and_block_x,10.1f+dominoes_and_bl
         new CircleQuarter(10.0f,10.0f,2.6,m_world,90,180);
 new block(1.6,0.0,11.7f,10.0f,0,m_world,0,0.0f,1.0f);
 
+        new CircleQuarter(33.0f,19.50f,10,m_world,90,130);
+                new CircleQuarter(33.0f,19.50f,7.5,m_world,90,130);
+
+        new CircleQuarter(33.0f,27.0f,2.5,m_world,0,90);
+        new block(0.0f,12.0,33.0,15.0f,0,m_world,0,0.0f,1.0f);
+                new block(0.0f,12.0,35.5,15.0f,0,m_world,0,0.0f,1.0f);
+        new CircleQuarter(35.50f,2.5f,2.5,m_world,180,270);
+new sphere(1.0,10.0,0.0,1.0,38.0,1.0f,1,m_world);
+new sphere(1.0,10.0,0.0,1.0,42.0,1.0f,1,m_world);
+
+
+//new sphere(1.0f,1.0f,0.0f,1.0f,33.0f,28.5f,0,m_world);
+                //new CircleQuarter(49.5f,20.0f,10,m_world,180,270);
+               // new CircleQuarter(30.5f,5.0f,5,m_world,90,270);
+
+
 
 
 
        // new block(15.0f,0.2f,3.7f,6.5f,0,m_world,0, 1.0f,0.05f);
         // new sphere(1.0f,1.0f,0.0f,1.0f,5.0f,7.7f,1,m_world);
 
-//new newtons_pendulum(11.7f,7.8f,1.0f,1.0f,0.0f,1.0f,10,0.0f,m_world);
+new newtons_pendulum(46.0f,1.0f,1.0f,10.0f,0.0f,1.0f,10,0.0f,m_world);
 
     //  new sphere(1.0f,-1.7f,0.1f,4.0f,25.2f,0,m_world);
 
@@ -673,10 +690,10 @@ w=new weld(b1,b6,x-l, y,m_world);
 w=new weld(b5,b6,x-l-2.0f, y-3.0f,m_world);
     }
 
-float ballonx = 30.0f;
+float ballonx = 80.0f;
 float ballony  = 3.0f;
 new sphere(1.0f,5.f,0.0f,0.1f,ballonx,ballony,0,m_world);
- float rp_shiftx =  20.0f;
+ float rp_shiftx =  60.0f;
 
     new revolving_platform(3.0f,0.0f,4.0f+rp_shiftx,20.0f,10.0f,m_world);
     new sphere(1.0f,15.f,100.0f,0.01f,18.0f+rp_shiftx,37.2f,1,m_world);
@@ -697,7 +714,7 @@ new sphere(1.0f,5.f,0.0f,0.1f,ballonx,ballony,0,m_world);
 
 {
 //the pulley motor
-  float x=50.0f+rp_shiftx;
+  float x=60.0f+rp_shiftx;
 float y=20.0f;
 b=new block(3.0f,0.1f,x,y,0,m_world,1);
 b2Body* b1=b->body;
