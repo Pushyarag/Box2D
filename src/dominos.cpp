@@ -367,6 +367,44 @@ public:
     }
 };
 
+
+class custom_revolving_platform
+{
+public:
+
+    custom_revolving_platform(float h, float w, float x, float y,float density, b2World *m_world)
+    {
+
+        b2PolygonShape shape;
+        shape.SetAsBox(2.2f+h, 0.2f+w);
+
+        b2BodyDef bd;
+        bd.position.Set(14.0f+x, 14.0f+y);
+        bd.type = b2_dynamicBody;
+        b2Body* body = m_world->CreateBody(&bd);
+        b2FixtureDef *fd = new b2FixtureDef;
+        fd->density = density;
+        fd->shape = new b2PolygonShape;
+        fd->shape = &shape;
+        body->CreateFixture(fd);
+
+        b2PolygonShape shape2;
+        shape2.SetAsBox(0.2f+h, 2.0f+w);
+        b2BodyDef bd2;
+        bd2.position.Set(14.0f+x, 16.0f+y);
+        b2Body* body2 = m_world->CreateBody(&bd2);
+
+        b2RevoluteJointDef jointDef;
+        jointDef.bodyA = body;
+        jointDef.bodyB = body2;
+        jointDef.localAnchorA.Set((2.2f+h)/2,0+w/2);
+        jointDef.localAnchorB.Set(0,0);
+        jointDef.collideConnected = false;
+        m_world->CreateJoint(&jointDef);
+    }
+};
+
+
 /*!  dominoes
        * \brief the class to create a set of small rectangular blocks which when triggered fall one after the other
        */
@@ -659,7 +697,8 @@ new sphere(1.0,10.0,0.0,1.0,42.0,1.0f,1,m_world);
 new newtons_pendulum(46.0f,1.0f,1.0f,10.0f,0.0f,1.0f,10,0.0f,m_world);
 
     //  new sphere(1.0f,-1.7f,0.1f,4.0f,25.2f,0,m_world);
-
+    new block(0.2f,3.0f,72.0f,3.0f,0,m_world,0,0.0f,1.0f);
+new custom_revolving_platform(4,0,64.0f,-10.0f,10.0f,m_world);
 
 {
 
@@ -714,7 +753,7 @@ new sphere(1.0f,5.f,0.0f,0.1f,ballonx,ballony,0,m_world);
 
 {
 //the pulley motor
-  float x=60.0f+rp_shiftx;
+  float x=50.0f+rp_shiftx;
 float y=20.0f;
 b=new block(3.0f,0.1f,x,y,0,m_world,1);
 b2Body* b1=b->body;
@@ -754,7 +793,8 @@ r=new rev_j(b4,b1,x, y,m_world,-1);
 
 }
 
-
+new block(0.0f,8.0f,rp_shiftx+58.0f,8.0f,0,m_world,0,0.0f,1.0f);
+new block(0.0f,8.0f,rp_shiftx+52.5f,8.0f,0,m_world,0,0.0f,1.0f);
 
 
 
