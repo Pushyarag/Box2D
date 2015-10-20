@@ -145,9 +145,29 @@ report:
 	@mkdir -p reports
 	@$(ECHO) ""
 	@$(ECHO) "Generating report.pdf ..."
-
-
+	@$ pdflatex report.tex tex 1>/dev/null
+	@$ bibtex report
+	@$ pdflatex report.tex tex 1>/dev/null
+	@$ bibtex report
+	@$ pdflatex report.tex 1>/dev/null  
+	@$ pdflatex Beamer.tex 1>/dev/null 
 	@$(ECHO) ""
 	@$(ECHO) "Generating slides.pdf ..."	
-
+	@$ rm -rf report.aux || true	
+	@$ rm -rf report.bbl || true
+	@$ rm -rf report.log || true
+	@$ rm -rf report.toc || true
+	@$ rm -rf report.blg || true
+	@$ rm -rf report.out || true
+	@$ rm -rf report.lof || true
+	@$ rm -rf Beamer.aux || true	
+	@$ rm -rf Beamer.bbl || true
+	@$ rm -rf Beamer.log || true
+	@$ rm -rf Beamer.toc || true
+	@$ rm -rf Beamer.blg || true
+	@$ rm -rf Beamer.out || true
+	@$ rm -rf Beamer.lof || true
+	@$ rm -rf Beamer.snm || true
+	@$ rm -rf Beamer.nav || true
+	@$ rm -rf reports || true
 	@$(ECHO) "Reporting Done ..."
