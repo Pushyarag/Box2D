@@ -43,11 +43,11 @@ namespace cs251
    * This is the documentation block for the constructor.
    */ 
   
-  dominos_t::dominos_t()
-  {
+ 
 
-
-
+/*!  block object
+       * \brief This is the class to create rectangular blocks
+       */
 class block{
 public:
   b2Body* body;
@@ -76,6 +76,9 @@ public:
 
 
 
+/*!  sphere object
+       * \brief This is the class to create spheres
+       */
 class sphere
 {
 
@@ -107,6 +110,11 @@ public:
 };
 
 
+
+
+/*!  weld joint
+       * \brief This is the class to create a fixed joint between 2 bodies
+       */
 class weld{
 public:
   weld(b2Body* b1,b2Body* b2,float x,float y,b2World* m_world){
@@ -119,6 +127,10 @@ m_world->CreateJoint(&weldJointDef);
 }
 };
 
+
+/*!  revolute joint 
+       * \brief This is the class to create a joint between 2 bodies which allows free rotation about the joint
+       */
 
 class rev_j{
 public:
@@ -140,6 +152,12 @@ jd.maxMotorTorque = 1000;
  }
 };
 
+
+
+/*!  pulley joint
+       * \brief This is the class to create a pulley with given 2 bodies
+       */
+
 class pulley_j{
 // The pulley joint
      public:
@@ -160,8 +178,9 @@ pulley_j(b2Body* box1,b2Body* box2,float b1x,float b1y,float b2x,float b2y,float
 
 
 
-
-
+/*!  open box object
+       * \brief This is the class to create an open box
+       */
 class open_box{ 
 public:
   b2Body* box1;
@@ -177,6 +196,10 @@ box1=b1->body;
     }
 };
 
+
+
+ dominos_t::dominos_t()
+  {
 
 
 block* b;
@@ -208,6 +231,11 @@ sphere* s;
       ground->CreateFixture(&shape, 0.0f);
     }
 */
+   
+   /*!  dominoes
+       * \brief This is the set of 10 dominoes
+       */
+
     //Dominos
     {
       b2PolygonShape shape;
@@ -228,6 +256,7 @@ sphere* s;
 	}
     }
       
+
     //Another horizontal shelf
     {
       b2PolygonShape shape;
@@ -409,6 +438,7 @@ pulley_j* pj=new pulley_j(ob->box1,b2,x,y,x+x2,y+y2-1,x, y+5.0f,x+10.0f, y+5.0f,
     }
 
 
+
     //The see-saw system at the bottom
     {
       //The triangle wedge
@@ -537,19 +567,6 @@ b=new block(3.0f,0.1f,x,y,90,m_world,1);
 b2Body* b3=b->body;
 b=new block(0.001f,0.001f,x,y,0,m_world,0);
 b2Body* b4=b->body;
-//b=new block(3.0f,0.2f,x,y,5,m_world,0);
-
-//the pendulum
-//b=new block(0.2f,5.2f,x,y-5.0f,0,m_world,1);
-//b2Body* b5=b->body;
-//b->bd.position.Set(0.0f, -52.0f);
-
-// //the bob b6
-// b=new block(0.5f,0.5f,x-6.0f,y-10.0f,0,m_world,1,80.0f);
-// b2Body* b6=b->body;
-//  b6->SetGravityScale(90);
-// w=new weld(b2,b6,x, y,m_world);
-// r=new rev_j(b6,b3,x, y,m_world);
 
 
 w=new weld(b1,b2,x, y,m_world);
@@ -600,15 +617,3 @@ s=new sphere(radius,0.0f,0.0f,0.0f,x-5.0f,y-3.0f,0,m_world,0);
 
   sim_t *sim = new sim_t("Dominos", dominos_t::create);
 }
-
-// b2BodyDef bodyDef;
-// bodyDef.type = b2_dynamicBody;
-// bodyDef.position.Set(0.0f, 4.0f);
-// b2Body* bodyt = m_world->CreateBody(&bodyDef);
-// b2PolygonShape dynamicBox;
-// dynamicBox.SetAsBox(1.0f, 1.0f);
-// b2FixtureDef fixtureDef;
-// fixtureDef.shape = &dynamicBox;
-// fixtureDef.density = 1.0f;
-// fixtureDef.friction = 0.3f;
-// bodyt->CreateFixture(&fixtureDef);
