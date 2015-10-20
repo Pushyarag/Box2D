@@ -190,10 +190,12 @@ class CircleQuarter{
 public:
 CircleQuarter(float x, float y, float radius, b2World * m_world, int start, int ends){
 
-for (int i=start ; i <= ends; i++) {
+for (int i=start ; i <= ends; i++) 
+{
 
 new block( 0.100f,0.00f,x+radius*cos( i * PI / 180.0),y+radius*sin( i * PI / 180.0),-i, m_world,0,0.0f,1.0f);
 }
+
 }
 };
 
