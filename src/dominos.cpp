@@ -186,7 +186,9 @@ public:
 
 
 
-
+/*!  CircleQuarter object
+       * \brief This is the class to create circular arcs as paths for objects of given radius and coordinates
+       */
 class CircleQuarter{
 public:
 CircleQuarter(float x, float y, float radius, b2World * m_world, int start, int ends){
@@ -197,10 +199,6 @@ new block( 0.100f,0.00f,x+radius*cos( i * PI / 180.0),y+radius*sin( i * PI / 180
 }
 }
 };
-
-
-
-
 
 
 /*!  pulley object
@@ -307,25 +305,10 @@ public:
         sbody->CreateFixture(&wedgefd);
 
         //The plank on top of the wedge
-        b2PolygonShape shape;
-        shape.SetAsBox(8.0f, 0.2f);
-        b2BodyDef bd2;
-        bd2.position.Set(-30.0f, 4.5f);
-        bd2.type = b2_dynamicBody;
-        b2Body* body = m_world->CreateBody(&bd2);
-        b2FixtureDef *fd2 = new b2FixtureDef;
-        fd2->density = 0.01f;
-        fd2->friction = 111.f;
-        fd2->shape = new b2PolygonShape;
-        fd2->shape = &shape;
-        body->CreateFixture(fd2);
-
-        b2RevoluteJointDef jd;
-        b2Vec2 anchor;
-        anchor.Set(-30.0f, 4.5f);
-        jd.Initialize(sbody, body, anchor);
-        m_world->CreateJoint(&jd);
-    }
+block* b=new block(8.0f,0.2f,-30.0f,4.5f,0,m_world,1,111.0f,0.01f);
+    b2Body* body = b->body;
+    new rev_j(sbody,body,-30.0f,4.5f,m_world);
+            }
 };
 
 
@@ -470,8 +453,8 @@ block* b1=new block(2.0f,0.2f,0.0f+x,-1.9f+y,0,m_world,1,1.0f,0.5f);
 block* b2=new block(0.2f,2.0f,2.0f+x,y,0, m_world,1,1.0f,0.5f);
 block* b3=new block(0.2f,2.0f,-2.0f+x,y,0,m_world,1,1.0f,0.5f);
 b1->body->SetFixedRotation(true);
-weld* w=new weld(b1->body,b2->body,x+2.0f, y-1.9f,m_world);
-w=new weld(b3->body,b1->body,x-2.0f, y-1.9f,m_world);
+new weld(b1->body,b2->body,x+2.0f, y-1.9f,m_world);
+new weld(b3->body,b1->body,x-2.0f, y-1.9f,m_world);
 box1=b1->body;
     }
 };
@@ -488,7 +471,7 @@ for(int i=0;i<n;i++){
     b2=b->body; 
     sphere*sp= new sphere(radius,density,friction,restitution,x,y,1,m_world);
     b2Body* sbody=sp->body;
-rev_j* rj= new rev_j(sbody,b2,x,y+8.0f,m_world);
+new rev_j(sbody,b2,x,y+8.0f,m_world);
       x=x+2*radius+0.01f;
 
 }
@@ -512,21 +495,19 @@ Bucket_Water(float x1,float y1,b2World* m_world){
 float x=x1;
 float y=y1;
 block* b;
-weld* w;
-rev_j* r;
 b=new block(3.0f,0.2f,x,y+2.2f,30,m_world,1);
 b2Body* b1=b->body;
 // base of the bucket b2
 b=new block(1.5f,0.2f,x+2.0f,y,0,m_world,1);
 b2Body* b2=b->body;
-w=new weld(b1,b2,x+0.5f, y,m_world);
+new weld(b1,b2,x+0.5f, y,m_world);
 b=new block(3.0f,0.2f,x+4.0f,y+2.2f,-30,m_world,1);
 b2Body* b4=b->body;
-w=new weld(b4,b2,x+3.5f, y,m_world);
+new weld(b4,b2,x+3.5f, y,m_world);
 //lid of bucket b5
 b=new block(2.0f,0.2f,x+3.2f,y+4.8f,0,m_world,1);
 b2Body* b5=b->body;
-w=new weld(b5,b4,x+4.6f, y+4.8f,m_world);
+new weld(b5,b4,x+4.6f, y+4.8f,m_world);
 
 //water
 for(int i=0;i<20;i++){
@@ -538,27 +519,11 @@ b=new block(0.1f,0.1f,x+0.5f+0.2f*j,y+1.2f+0.2f*i,30,m_world,1);
 //pivoting the bucket
 b=new block(5.0f,0.2f,x+7.5f,y,0,m_world,0);
 b2Body* b3=b->body;
-r=new rev_j(b2,b3,x+2.5f, y,m_world);
+new rev_j(b2,b3,x+2.5f, y,m_world);
 
 }
 
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 block* b;
@@ -579,12 +544,6 @@ dominos_t::dominos_t()
      */
 
     new ground(m_world);
-
-
-
-
-
-
     new sphere(1.0f,5.f,0.0f,0.1f,-52.0f,22.0f,1,m_world);
 
 
@@ -618,7 +577,7 @@ dominos_t::dominos_t()
     new dominoes(1.0f,0.1f,10.0f+dominoes_and_block_x,10.0f+dominoes_and_block_y,1.0f,100.0f,0.1f,9,m_world);
     new block(6.0f,0.1f,14.5f+dominoes_and_block_x,10.0f+dominoes_and_block_y,0,m_world,0,1.0f,1.f);
     //new block(1.0f,1.0f,19.5f+dominoes_and_block_x,10.1f+dominoes_and_block_y,1.f,0,m_world,1);
-new sphere(1.0f,10.0f,0.0f,0.0f,19.5f+dominoes_and_block_x,10.1f+dominoes_and_block_y,1,m_world);
+    new sphere(1.0f,10.0f,0.0f,0.0f,19.5f+dominoes_and_block_x,10.1f+dominoes_and_block_y,1,m_world);
 
     new revolving_platform(-2.0f,2.0f,-30.6f,-13.0f,100.0f,m_world);
     new revolving_platform(-2.0f,2.0f,-30.9f,-9.0f,100.0f,m_world);
@@ -642,23 +601,8 @@ new block(1.6,0.0,11.7f,10.0f,0,m_world,0,0.0f,1.0f);
         new CircleQuarter(35.50f,2.5f,2.5,m_world,180,270);
 new sphere(1.0,10.0,0.0,1.0,38.0,1.0f,1,m_world);
 new sphere(1.0,10.0,0.0,1.0,42.0,1.0f,1,m_world);
-
-
-//new sphere(1.0f,1.0f,0.0f,1.0f,33.0f,28.5f,0,m_world);
-                //new CircleQuarter(49.5f,20.0f,10,m_world,180,270);
-               // new CircleQuarter(30.5f,5.0f,5,m_world,90,270);
-
-
-
-
-
-       // new block(15.0f,0.2f,3.7f,6.5f,0,m_world,0, 1.0f,0.05f);
-        // new sphere(1.0f,1.0f,0.0f,1.0f,5.0f,7.7f,1,m_world);
-
 new newtons_pendulum(45.0f,1.0f,1.0f,10.0f,0.0f,1.0f,10,0.0f,m_world);
-
-    //  new sphere(1.0f,-1.7f,0.1f,4.0f,25.2f,0,m_world);
-    new block(0.2f,3.0f,72.0f,3.0f,0,m_world,0,0.0f,1.0f);
+new block(0.2f,3.0f,72.0f,3.0f,0,m_world,0,0.0f,1.0f);
 new custom_revolving_platform(4,0,64.0f,-10.0f,10.0f,m_world);
 
 {
@@ -710,8 +654,6 @@ new sphere(1.0f,5.f,0.0f,0.1f,ballonx,ballony,0,m_world);
     new block(15.0f,0.2f,32.0f+rp_shiftx,25.5f,-60,m_world,0, 1.0f,0.05f);
 
 
-
-
 {
 //the pulley motor
   float x=50.0f+rp_shiftx;
@@ -724,33 +666,12 @@ b=new block(3.0f,0.1f,x,y,90,m_world,1);
 b2Body* b3=b->body;
 b=new block(0.001f,0.001f,x,y,0,m_world,0);
 b2Body* b4=b->body;
-//b=new block(3.0f,0.2f,x,y,5,m_world,0);
 
-//the pendulum
-//b=new block(0.2f,5.2f,x,y-5.0f,0,m_world,1);
-//b2Body* b5=b->body;
-//b->bd.position.Set(0.0f, -52.0f);
-
-// //the bob b6
-// b=new block(0.5f,0.5f,x-6.0f,y-10.0f,0,m_world,1,80.0f);
-// b2Body* b6=b->body;
-//  b6->SetGravityScale(90);
-// w=new weld(b2,b6,x, y,m_world);
-// r=new rev_j(b6,b3,x, y,m_world);
-
-
-w=new weld(b1,b2,x, y,m_world);
-w=new weld(b2,b3,x, y,m_world);
-r=new rev_j(b4,b3,x, y,m_world,-1);
-r=new rev_j(b4,b2,x, y,m_world,-1);
-r=new rev_j(b4,b1,x, y,m_world,-1);
-
-//test
-//b=new block(0.5f,0.5f,x+2.2f,y+5.0f,0,m_world,1);
-//b2Body* b7=b->body;
-
-//w=new weld(b6,b5,x, y-10.0f,m_world);
-
+new weld(b1,b2,x, y,m_world);
+new weld(b2,b3,x, y,m_world);
+new rev_j(b4,b3,x, y,m_world,-1);
+new rev_j(b4,b2,x, y,m_world,-1);
+new rev_j(b4,b1,x, y,m_world,-1);
 
 }
 
@@ -772,24 +693,21 @@ new block(0.0f,8.0f,rp_shiftx+52.5f,8.0f,0,m_world,0,0.0f,1.0f);
 open_box* ob=new open_box(x,y-2.0f,10,10,m_world);
 
 b=new block(6.0f,0.2f,x+x1,y+y1,0,m_world,0);
-b2Body* b1=b->body;
+//b2Body* b1=b->body;
 
 b=new block(5.0f,0.2f,x+x2,y+y2,0,m_world,1,1000);
 b2Body* b2=b->body;
       // The pulley joint
-pulley_j* pj=new pulley_j(ob->box1,b2,x,y,x+x2,y+y2-1,x, y+5.0f,x+10.0f, y+5.0f,m_world);
-
+new pulley_j(ob->box1,b2,x,y,x+x2,y+y2-1,x, y+5.0f,x+10.0f, y+5.0f,m_world);
 
 //test
 //b=new block(5.0f,0.2f,x,y+5.0f,0,m_world,1,10);
 
 }
-Bucket_Water* bw=new Bucket_Water(89.0f+rp_shiftx,23.0f,m_world);
 
+new Bucket_Water(89.0f+rp_shiftx,23.0f,m_world);
 
 //new CircleQuarter(5,5,5,m_world,90);
-
-
 new block(20.0f,0.0f,rp_shiftx+80,10,0,m_world,0,1.0f,1.0f);
 new block(0.0f,8.0f,rp_shiftx+100.5f,8.0f,0,m_world,0,0.0f,1.0f);
 
@@ -797,21 +715,5 @@ new block(0.0f,8.0f,rp_shiftx+100.5f,8.0f,0,m_world,0,0.0f,1.0f);
 }
 
 
-
-
-
-
 sim_t *sim = new sim_t("Dominos", dominos_t::create);
 }
-
-// b2BodyDef bodyDef;
-// bodyDef.type = b2_dynamicBody;
-// bodyDef.position.Set(0.0f, 4.0f);
-// b2Body* bodyt = m_world->CreateBody(&bodyDef);
-// b2PolygonShape dynamicBox;
-// dynamicBox.SetAsBox(1.0f, 1.0f);
-// b2FixtureDef fixtureDef;
-// fixtureDef.shape = &dynamicBox;
-// fixtureDef.density = 1.0f;
-// fixtureDef.friction = 0.3f;
-// bodyt->CreateFixture(&fixtureDef);
