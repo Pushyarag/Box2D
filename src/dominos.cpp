@@ -64,7 +64,9 @@ public:
 
 
 
-
+/*!  weld joint object
+       * \brief the class to create a fixed joint between 2 given objects
+       */
 
 class weld{
 public:
@@ -78,7 +80,9 @@ m_world->CreateJoint(&weldJointDef);
 }
 };
 
-
+/*!  revolute joint object
+       * \brief the class to create a joint between 2 given objects which allows free rotation about the joint
+       */
 class rev_j{
 public:
   rev_j(b2Body* b1,b2Body* b2,float x,float y,b2World* m_world,int mot=0){
@@ -299,7 +303,9 @@ public:
 };
 
 
-
+/*!  revolving_platform
+       * \brief the class to create a block object hinged at its center
+       */
 class revolving_platform
 {
 public:
@@ -336,7 +342,9 @@ public:
     }
 };
 
-
+/*!  dominoes
+       * \brief the class to create a set of small rectangular blocks which when triggered fall one after the other
+       */
 class dominoes
 {
 
@@ -364,7 +372,9 @@ public:
 };
 
 
-
+/*!  pulley_joint object
+       * \brief the class to create a pulley with 2 given bodies 
+       */
 class pulley_j{
 // The pulley joint
      public:
@@ -384,7 +394,9 @@ pulley_j(b2Body* box1,b2Body* box2,float b1x,float b1y,float b2x,float b2y,float
 };
 
 
-
+/*!  open box object
+       * \brief the class to create a  box wit hno lid ie.. top side open
+       */
 class open_box{
 public:
   b2Body* box1;
@@ -463,6 +475,64 @@ for(int i=0;i<n;i++){
 
 
 };
+
+
+/*!  Bucket_Water
+       * \brief the class to create a bucket object filled with water
+              */
+class Bucket_Water{
+public:
+Bucket_Water(float x1,float y1,b2World* m_world){
+  //Bucket of water
+float x=x1;
+float y=y1;
+block* b;
+weld* w;
+rev_j* r;
+b=new block(3.0f,0.2f,x,y+2.2f,30,m_world,1);
+b2Body* b1=b->body;
+// base of the bucket b2
+b=new block(1.5f,0.2f,x+2.0f,y,0,m_world,1);
+b2Body* b2=b->body;
+w=new weld(b1,b2,x+0.5f, y,m_world);
+b=new block(3.0f,0.2f,x+4.0f,y+2.2f,-30,m_world,1);
+b2Body* b4=b->body;
+w=new weld(b4,b2,x+3.5f, y,m_world);
+//lid of bucket b5
+b=new block(2.0f,0.2f,x+3.2f,y+4.8f,0,m_world,1);
+b2Body* b5=b->body;
+w=new weld(b5,b4,x+4.6f, y+4.8f,m_world);
+
+//water
+for(int i=0;i<20;i++){
+for(int j=0;j<15;j++){
+b=new block(0.1f,0.1f,x+0.5f+0.2f*j,y+1.2f+0.2f*i,30,m_world,1);
+}
+}
+
+//pivoting the bucket
+b=new block(5.0f,0.2f,x+7.5f,y,0,m_world,0);
+b2Body* b3=b->body;
+r=new rev_j(b2,b3,x+2.5f, y,m_world);
+
+}
+
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -574,18 +644,18 @@ new sphere(1.0f,5.f,0.0f,0.1f,ballonx,ballony,0,m_world);
  float rp_shiftx =  10.0f;
 
     new revolving_platform(3.0f,0.0f,4.0f+rp_shiftx,20.0f,10.0f,m_world);
-    new sphere(1.0f,5.f,100.0f,0.01f,18.0f+rp_shiftx,37.2f,1,m_world);
+    new sphere(1.0f,15.f,100.0f,0.01f,18.0f+rp_shiftx,37.2f,1,m_world);
 
     new revolving_platform(3.0f,0.0f,13.0f+rp_shiftx,19.5f,10.0f,m_world);
-    new sphere(1.0f,5.f,100.0f,0.01f,27.0f+rp_shiftx,36.7f,1,m_world);
+    new sphere(1.0f,15.f,100.0f,0.01f,27.0f+rp_shiftx,36.7f,1,m_world);
 
     new revolving_platform(3.0f,0.0f,22.0f+rp_shiftx,20.0f,10.0f,m_world);
-    new sphere(1.0f,5.f,100.0f,0.01f,36.0f+rp_shiftx,37.2f,1,m_world);
+    new sphere(1.0f,15.f,100.0f,0.01f,36.0f+rp_shiftx,37.2f,1,m_world);
     new revolving_platform(3.0f,0.0f,31.0f+rp_shiftx,19.5f,10.0f,m_world);
-    new sphere(1.0f,5.f,100.0f,0.01f,45.0f+rp_shiftx,36.7f,1,m_world);
+    new sphere(1.0f,15.f,100.0f,0.01f,45.0f+rp_shiftx,36.7f,1,m_world);
 
 
-    new block(15.0f,0.2f,32.0f+rp_shiftx,15.5f,-60,m_world,0, 1.0f,0.05f);
+    new block(15.0f,0.2f,32.0f+rp_shiftx,25.5f,-60,m_world,0, 1.0f,0.05f);
 
 
 
@@ -593,7 +663,7 @@ new sphere(1.0f,5.f,0.0f,0.1f,ballonx,ballony,0,m_world);
 {
 //the pulley motor
   float x=50.0f+rp_shiftx;
-float y=10.0f;
+float y=20.0f;
 b=new block(3.0f,0.1f,x,y,0,m_world,1);
 b2Body* b1=b->body;
 b=new block(3.0f,0.1f,x,y,45,m_world,1);
@@ -639,19 +709,19 @@ r=new rev_j(b4,b1,x, y,m_world,-1);
 //The pulley system
     {
       float x=10.0f+rp_shiftx+45.3;
-      float y=7.0f;
+      float y=17.0f;
      float x1=30.0f;
       float y1=5.0f;
-      float x2=34.0f;
+      float x2=30.0f;
       float y2=6.0f;
 
 
-open_box* ob=new open_box(x,y,10,10,m_world);
+open_box* ob=new open_box(x,y-2.0f,10,10,m_world);
 
 b=new block(4.0f,0.2f,x+x1,y+y1,0,m_world,0);
 b2Body* b1=b->body;
 
-b=new block(5.0f,0.2f,x+x2,y+y2,0,m_world,1,10);
+b=new block(9.0f,0.2f,x+x2,y+y2,0,m_world,1,90);
 b2Body* b2=b->body;
       // The pulley joint
 pulley_j* pj=new pulley_j(ob->box1,b2,x,y,x+x2,y+y2-1,x, y+5.0f,x+10.0f, y+5.0f,m_world);
@@ -661,7 +731,7 @@ pulley_j* pj=new pulley_j(ob->box1,b2,x,y,x+x2,y+y2-1,x, y+5.0f,x+10.0f, y+5.0f,
 //b=new block(5.0f,0.2f,x,y+5.0f,0,m_world,1,10);
 
 }
-
+Bucket_Water* bw=new Bucket_Water(105.0f,22.0f,m_world);
 
 
 
