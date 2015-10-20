@@ -31,9 +31,12 @@ GL_ROOT=/usr/include/
 LIBS = -lBox2D -lglui -lglut -lGLU -lGL
 
 # Compiler and Linker flags
-CPPFLAGS =-g -Wall -fno-strict-aliasing
+CPPFLAGS =  -O3 -Wall -fno-strict-aliasing
 CPPFLAGS+=-I $(BOX2D_ROOT)/include -I $(GLUI_ROOT)/include
 LDFLAGS+=-L $(BOX2D_ROOT)/lib -L $(GLUI_ROOT)/lib
+
+
+
 
 ######################################
 
@@ -57,18 +60,21 @@ INCS := $(wildcard $(SRCDIR)/*.hpp)
 OBJS := $(SRCS:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 
 
-.PHONY: all setup doc clean distclean
+.PHONY: all setup codeDoc clean distclean report profile release
 
-all: setup $(BINDIR)/$(TARGET)
+
+all: setup release codeDoc report profile 
 
 setup:
+	@$(ECHO) ""
 	@$(ECHO) "Setting up compilation..."
 	@mkdir -p obj
 	@mkdir -p bin
+	
 
 $(BINDIR)/$(TARGET): $(OBJS)
 	@$(PRINTF) "$(MESG_COLOR)Building executable:$(NO_COLOR) $(FILE_COLOR) %16s$(NO_COLOR)" "$(notdir $@)"
-	@$(CC) -o $@ $(LDFLAGS) $(OBJS) $(LIBS) 2> temp.log || touch temp.err
+	@$(CC) -pg -o $@ $(LDFLAGS) -O3 $(OBJS) $(LIBS) 2> temp.log || touch temp.err
 	@if test -e temp.err; \
 	then $(PRINTF) $(ERR_FMT) $(ERR_STRING) && $(CAT) temp.log; \
 	elif test -s temp.log; \
@@ -81,7 +87,7 @@ $(BINDIR)/$(TARGET): $(OBJS)
 
 $(OBJS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp
 	@$(PRINTF) "$(MESG_COLOR)Compiling: $(NO_COLOR) $(FILE_COLOR) %25s$(NO_COLOR)" "$(notdir $<)"
-	@$(CC) $(CPPFLAGS) -c $< -o $@ -MD 2> temp.log || touch temp.err
+	@$(CC) $(CPPFLAGS) -pg -c $< -o $@ -MD 2> temp.log || touch temp.err
 	@if test -e temp.err; \
 	then $(PRINTF) $(ERR_FMT) $(ERR_STRING) && $(CAT) temp.log; \
 	elif test -s temp.log; \
@@ -90,16 +96,42 @@ $(OBJS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp
 	fi;
 	@$(RM) -f temp.log temp.err
 
-doc:
+codeDoc:
+	@$(ECHO) ""
 	@$(ECHO) -n "Generating Doxygen Documentation ...  "
 	@$(RM) -rf doc/html
 	@$(DOXYGEN) $(DOCDIR)/Doxyfile 2 > /dev/null
-	@$(ECHO) "Done"
+	@$(ECHO) ""
+	@$(ECHO) " Documenting Done"
 
 clean:
+	@$(ECHO) ""
 	@$(ECHO) -n "Cleaning up..."
 	@$(RM) -rf $(OBJDIR) *~ $(DEPS) $(SRCDIR)/*~
-	@$(ECHO) "Done"
+	@$(ECHO) ""
+	@$(ECHO) " cleaning Done"
 
 distclean: clean
-	@$(RM) -rf $(BINDIR) $(DOCDIR)/html
+	@$(RM) -rf $(BINDIR) $(DOCDIR)/html profile
+	@$(ECHO) ""
+	@$(ECHO) " directory clean Done"
+
+	
+profile: setup $(BINDIR)/$(TARGET)
+	@mkdir -p profile
+	@$(ECHO) ""
+	@$(ECHO) "Profiling using gprof ..."
+	@cd profile && ../bin/cs251_base 
+	@cd profile && gprof ../bin/cs251_base gmon.out > analysis.txt
+	@$(ECHO) ""
+	@$(ECHO) "Generating dot file ..."
+	@cd profile && python ../external/gprof2dot.py analysis.txt -o analysis.dot
+	@$(ECHO) ""
+	@$(ECHO) "Generating callgraph ..."
+	@cd profile && dot -Tpng analysis.dot -o callgraph.png
+	@$(ECHO) ""
+	@$(ECHO) "Profiling Done"
+
+release: setup $(BINDIR)/$(TARGET)
+
+
