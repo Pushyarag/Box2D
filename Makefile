@@ -61,9 +61,8 @@ OBJS := $(SRCS:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 
 
 .PHONY: all setup codeDoc clean distclean report profile release
+all: setup release codeDoc report 
 
-
-all: setup release codeDoc report profile 
 
 setup:
 	@$(ECHO) ""
@@ -132,6 +131,23 @@ profile: setup $(BINDIR)/$(TARGET)
 	@$(ECHO) ""
 	@$(ECHO) "Profiling Done"
 
-release: setup $(BINDIR)/$(TARGET)
+release: setup 
+	@pushd ./external/src/
+	@cd ./external/src/ && tar xvzf Box2D.tgz
+	@cd ./external/src/Box2D/ && mkdir -p build251
+	@cd ./external/src/Box2D/build251/ && cmake -DCMAKE_BUILD_TYPE=Release ../
+	@cd ./external/src/Box2D/build251/ && make
+	@cd ./external/src/Box2D/build251/ && make install
+	@make $(BINDIR)/$(TARGET)
+	@$(ECHO) ""
+	@$(ECHO) "Release version successfully created ..."
+report: 
+	@mkdir -p reports
+	@$(ECHO) ""
+	@$(ECHO) "Generating report.pdf ..."
 
 
+	@$(ECHO) ""
+	@$(ECHO) "Generating slides.pdf ..."	
+
+	@$(ECHO) "Reporting Done ..."
