@@ -1,0 +1,9 @@
+\addcontentsline{toc}{chapter}{References}
+\begin{thebibliography}{99}
+%\bibitem{WRITE A SHORT-NAME WITHOUT SPACE} \emph{NAME OF IEEE PAPER}; NAME OF AUTHORS
+\medskip 
+\bibliographystyle{unsrt}
+\bibliography{ref}
+
+\end{thebibliography}
+

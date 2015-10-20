@@ -1,0 +1,10 @@
+\chapter{Requirement Analysis}
+\section{INPUT AUDIO FEATURES}
+\paragraph{} The program uses auto note detection which operates based on the variations in the intensity of sound. In almost all the cases there is an sudden increase in the intensity i.e proportional to the square of the values in the input array.Thus for efficient note detection the input audio signal must have considerable amount of variation when a note begins.This can be assured when the sound intensity of noise in the signal is considerably less than the note sound intensity.
+\begin{figure}[H]
+ \centering
+   \includegraphics[height= 7.5cm, width=15cm]{project/images/MAIN.png}
+  \caption{\textbf{Difference in noise and note }}
+  
+\end{figure}
+\paragraph{} The manual tuning requires the user to set a threshold above which the note can be detected.This feature allows him to choose only the required regions to find frequency.It checks if the intensity is greater than the given threshold and plots the graph.The points thus recognised are stored in an array for processing.
