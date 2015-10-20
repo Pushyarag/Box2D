@@ -745,8 +745,36 @@ new block(0.0f,8.0f,rp_shiftx+100.5f,8.0f,0,m_world,0,0.0f,1.0f);
 
 //the clock
 new clock(-42.0f,35.0f,m_world);
+//the base below the clock
 new block(4.0f,0.2f,-43.6f,29.6f,0,m_world,0,0.0f,1.0f);
+//the domino below the clock
 new block(0.2f,1.0f,-45.0f,30.0f,0,m_world,1,0.0f,5.0f);
+
+
+//the man
+float x=145.0f;
+float y=20.0f;
+//body
+block* b=new block(2.f,1.0f,x,y,0,m_world,1,0.0f,5.0f);
+//right hand
+block* rh=new block(1.5f,0.2f,x+0.5f,y-1.0f,0,m_world,1,0.0f,5.0f);
+//left hand
+block* lh=new block(1.5f,0.2f,x+0.5f,y+1.0f,0,m_world,1,0.0f,5.0f);
+//right leg
+block* rl=new block(2.0f,0.2f,x-4.0f,y-1.0f,0,m_world,1,0.0f,5.0f);
+//left leg
+block* ll=new block(2.0f,0.2f,x-4.0f,y+1.0f,0,m_world,1,0.0f,5.0f);
+//neck
+block* n=new block(0.5f,0.2f,x+2.5f,y,0,m_world,1,0.0f,5.0f);
+//head
+sphere* h=new sphere(1.5f,1.0f,0.0f,1.0f,x+4.5f,y,1,m_world,1);
+
+new weld(b->body,rh->body,x+1.f,y-1.0f,m_world);
+new weld(b->body,lh->body,x+1.f,y+1.0f,m_world);
+new weld(b->body,rl->body,x-2.f,y-1.0f,m_world);
+new weld(b->body,ll->body,x-2.f,y+1.0f,m_world);
+new weld(b->body,n->body,x+2.f,y,m_world);
+new weld(b->body,h->body,x+3.f,y,m_world);
 
 }
 
