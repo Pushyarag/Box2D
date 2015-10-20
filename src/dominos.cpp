@@ -118,7 +118,7 @@ class sphere
  
 public:
 b2Body* body;
-    sphere(float radius,float density,float friction, float restitution, float x, float y,bool gravity, b2World* m_world)
+    sphere(float radius,float density,float friction, float restitution, float x, float y,bool gravity, b2World* m_world,int s_d=1)
     {
 
  b2Body* sbody;
@@ -131,7 +131,8 @@ b2Body* body;
         ballfd.friction = friction;
         ballfd.restitution = restitution;
         b2BodyDef ballbd;
-        ballbd.type = b2_dynamicBody;
+        if(s_d==0)ballbd.type = b2_staticBody;
+        else{ballbd.type = b2_dynamicBody;}
         ballbd.position.Set(x,y);
         sbody = m_world->CreateBody(&ballbd);
         body=sbody;
@@ -526,6 +527,35 @@ new rev_j(b2,b3,x+2.5f, y,m_world);
 };
 
 
+class clock{
+public:
+clock(float x1,float y1,b2World* m_world){
+//the Clock
+float x=x1;
+float y=y1;
+float radius=0.2f;
+//the handle
+block* b=new block(2.0f,0.1f,x,y,0,m_world,1);
+b2Body* b1=b->body;
+//the center
+b=new block(0.001f,0.001f,x-2.0f,y,0,m_world,0);
+b2Body* b2=b->body;
+new rev_j(b1,b2,x-2.0f, y,m_world,1);
+//the calibration
+new sphere(radius,0.0f,0.0f,0.0f,x-2.0f,y+4.4f,0,m_world,0);
+new sphere(radius,0.0f,0.0f,0.0f,x-2.0f,y-4.4f,0,m_world,0);
+new sphere(radius,0.0f,0.0f,0.0f,x+2.2f,y,0,m_world,0);
+new sphere(radius,0.0f,0.0f,0.0f,x-6.2f,y,0,m_world,0);
+new sphere(radius,0.0f,0.0f,0.0f,x+1.0f,y+3.0f,0,m_world,0);
+new sphere(radius,0.0f,0.0f,0.0f,x-5.0f,y+3.0f,0,m_world,0);
+new sphere(radius,0.0f,0.0f,0.0f,x+1.0f,y-3.0f,0,m_world,0);
+new sphere(radius,0.0f,0.0f,0.0f,x-5.0f,y-3.0f,0,m_world,0);
+}
+};
+
+
+
+
 block* b;
 weld* w;
 rev_j* r;
@@ -544,7 +574,7 @@ dominos_t::dominos_t()
      */
 
     new ground(m_world);
-    new sphere(1.0f,5.f,0.0f,0.1f,-52.0f,22.0f,1,m_world);
+    new sphere(1.0f,5.f,0.0f,0.1f,-47.0f,30.0f,1,m_world);
 
 
     new block(10.0f,0.1f,-48.0f,20.0f,-60,m_world,0,1.0f,1.f);
@@ -592,12 +622,12 @@ dominos_t::dominos_t()
         new CircleQuarter(10.0f,10.0f,2.6,m_world,90,180);
 new block(1.6,0.0,11.7f,10.0f,0,m_world,0,0.0f,1.0f);
 
-        new CircleQuarter(33.0f,19.50f,10,m_world,90,130);
-                new CircleQuarter(33.0f,19.50f,7.5,m_world,90,130);
+        new CircleQuarter(33.0f,16.50f,10,m_world,90,130);
+                new CircleQuarter(33.0f,16.50f,7.5,m_world,90,130);
 
-        new CircleQuarter(33.0f,27.0f,2.5,m_world,0,90);
-        new block(0.0f,12.0,33.0,15.0f,0,m_world,0,0.0f,1.0f);
-                new block(0.0f,12.0,35.5,15.0f,0,m_world,0,0.0f,1.0f);
+        new CircleQuarter(33.0f,24.0f,2.5,m_world,0,90);
+        new block(0.0f,11.0,33.0,13.0f,0,m_world,0,0.0f,1.0f);
+                new block(0.0f,11.0,35.5,14.0f,0,m_world,0,0.0f,1.0f);
         new CircleQuarter(35.50f,2.5f,2.5,m_world,180,270);
 new sphere(1.0,10.0,0.0,1.0,38.0,1.0f,1,m_world);
 new sphere(1.0,10.0,0.0,1.0,42.0,1.0f,1,m_world);
@@ -711,6 +741,10 @@ new Bucket_Water(89.0f+rp_shiftx,23.0f,m_world);
 new block(20.0f,0.0f,rp_shiftx+80,10,0,m_world,0,1.0f,1.0f);
 new block(0.0f,8.0f,rp_shiftx+100.5f,8.0f,0,m_world,0,0.0f,1.0f);
 
+//the clock
+new clock(-42.0f,35.0f,m_world);
+new block(4.0f,0.2f,-43.6f,29.6f,0,m_world,0,0.0f,1.0f);
+new block(0.2f,1.0f,-45.0f,30.0f,0,m_world,1,0.0f,5.0f);
 
 }
 
