@@ -115,7 +115,7 @@ jd.maxMotorTorque = 1000;
        */
 class sphere
 {
- 
+
 public:
 b2Body* body;
     sphere(float radius,float density,float friction, float restitution, float x, float y,bool gravity, b2World* m_world,int s_d=1)
@@ -194,7 +194,7 @@ class CircleQuarter{
 public:
 CircleQuarter(float x, float y, float radius, b2World * m_world, int start, int ends){
 
-for (int i=start ; i <= ends; i++) 
+for (int i=start ; i <= ends; i++)
 {
 
 new block( 0.100f,0.00f,x+radius*cos( i * PI / 180.0),y+radius*sin( i * PI / 180.0),-i, m_world,0,0.0f,1.0f);
@@ -353,7 +353,9 @@ public:
         m_world->CreateJoint(&jointDef);
     }
 };
-
+/*! custom_revolving_platform  object
+       * \brief the class to create custom_revolving_platform
+       */
 
 class custom_revolving_platform
 {
@@ -462,6 +464,9 @@ box1=b1->body;
     }
 };
 
+/*!  newtons_pendulum object
+       * \brief the class to create a  newton's pendulum at required position
+       */
 
 class newtons_pendulum{
 public:
@@ -471,7 +476,7 @@ newtons_pendulum(float x, float y, float radius,float density,float friction, fl
 for(int i=0;i<n;i++){
     b2Body* b2;
     block* b=new block(0.25f,0.25f,x,y+8.0f,0,m_world);
-    b2=b->body; 
+    b2=b->body;
     sphere*sp= new sphere(radius,density,friction,restitution,x,y,1,m_world);
     b2Body* sbody=sp->body;
 new rev_j(sbody,b2,x,y+8.0f,m_world);
@@ -527,6 +532,10 @@ new rev_j(b2,b3,x+2.5f, y,m_world);
 }
 
 };
+
+/*!  Bucket_Water
+       * \brief the class to create the clock which simulates the entire contraption
+              */
 
 
 class clock{
