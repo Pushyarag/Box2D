@@ -115,9 +115,9 @@ jd.maxMotorTorque = 1000;
        */
 class sphere
 {
-
+ 
 public:
-
+b2Body* body;
     sphere(float radius,float density,float friction, float restitution, float x, float y,bool gravity, b2World* m_world)
     {
 
@@ -134,6 +134,7 @@ public:
         ballbd.type = b2_dynamicBody;
         ballbd.position.Set(x,y);
         sbody = m_world->CreateBody(&ballbd);
+        body=sbody;
         sbody->CreateFixture(&ballfd);
         if(gravity==0)
         {
@@ -482,52 +483,12 @@ newtons_pendulum(float x, float y, float radius,float density,float friction, fl
 
 //The pendulum that knocks the dominos off
 for(int i=0;i<n;i++){
-      b2Body* b2;
-      {
-	b2PolygonShape shape;
-	shape.SetAsBox(0.25f, 1.5f);
-
-	b2BodyDef bd;
-	bd.position.Set(x, y-5.0f);
-	b2 = m_world->CreateBody(&bd);
-	b2->CreateFixture(&shape, 10.0f);
-      }
-/*
-      b2Body* b4;
-      {
-	b2PolygonShape shape;
-	shape.SetAsBox(0.5f, 0.25f);
-
-	b2BodyDef bd;
-	bd.type = b2_dynamicBody;
-	bd.position.Set(-40.0f, 33.0f);
-	b4 = m_world->CreateBody(&bd);
-	b4->CreateFixture(&shape, 2.0f);
-      }
-*/
-
- b2Body* sbody;
-        b2CircleShape circle;
-        circle.m_radius = radius;
-
-        b2FixtureDef ballfd;
-        ballfd.shape = &circle;
-        ballfd.density = density;
-        ballfd.friction = friction;
-        ballfd.restitution = restitution;
-        b2BodyDef ballbd;
-        ballbd.type = b2_dynamicBody;
-        ballbd.position.Set(x,y);
-        sbody = m_world->CreateBody(&ballbd);
-        sbody->CreateFixture(&ballfd);
-    //new sphere(1.0f,0.4f,0.5f,0.0f,19.5f+dominoes_and_block_x,10.1f+dominoes_and_block_y,1,m_world);
-    //sbody-> SetGravityScale(-1);
-      b2RevoluteJointDef jd;
-      b2Vec2 anchor;
-      anchor.Set(x, y+5.0f);
-      jd.Initialize(b2, sbody, anchor);
-      m_world->CreateJoint(&jd);
-
+    b2Body* b2;
+    block* b=new block(0.25f,0.25f,x,y+8.0f,0,m_world);
+    b2=b->body; 
+    sphere*sp= new sphere(radius,density,friction,restitution,x,y,1,m_world);
+    b2Body* sbody=sp->body;
+rev_j* rj= new rev_j(sbody,b2,x,y+8.0f,m_world);
       x=x+2*radius+0.01f;
 
 }
@@ -694,7 +655,7 @@ new sphere(1.0,10.0,0.0,1.0,42.0,1.0f,1,m_world);
        // new block(15.0f,0.2f,3.7f,6.5f,0,m_world,0, 1.0f,0.05f);
         // new sphere(1.0f,1.0f,0.0f,1.0f,5.0f,7.7f,1,m_world);
 
-new newtons_pendulum(46.0f,1.0f,1.0f,10.0f,0.0f,1.0f,10,0.0f,m_world);
+new newtons_pendulum(45.0f,1.0f,1.0f,10.0f,0.0f,1.0f,10,0.0f,m_world);
 
     //  new sphere(1.0f,-1.7f,0.1f,4.0f,25.2f,0,m_world);
     new block(0.2f,3.0f,72.0f,3.0f,0,m_world,0,0.0f,1.0f);
