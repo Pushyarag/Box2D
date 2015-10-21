@@ -60,7 +60,7 @@ INCS := $(wildcard $(SRCDIR)/*.hpp)
 OBJS := $(SRCS:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 
 
-.PHONY: all setup codeDoc clean distclean report profile release
+.PHONY: all setup release codeDoc clean  compile distclean report profile release
 all: setup release codeDoc report 
 
 
@@ -131,6 +131,9 @@ profile: setup $(BINDIR)/$(TARGET)
 	@$(ECHO) ""
 	@$(ECHO) "Profiling Done"
 
+compile:
+	@make $(BINDIR)/$(TARGET)
+
 release: setup 
 	@pushd ./external/src/
 	@cd ./external/src/ && tar xvzf Box2D.tgz
@@ -141,6 +144,7 @@ release: setup
 	@make $(BINDIR)/$(TARGET)
 	@$(ECHO) ""
 	@$(ECHO) "Release version successfully created ..."
+
 report: 
 	@mkdir -p reports
 	@$(ECHO) ""
