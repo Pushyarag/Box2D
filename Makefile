@@ -111,11 +111,10 @@ clean:
 	@$(ECHO) " cleaning Done"
 
 distclean: clean
-	@$(RM) -rf $(BINDIR) $(DOCDIR)/html profile reports ./external/src/Box2D
+	@$(RM) -rf $(BINDIR) $(DOCDIR)/html profile reports ./external/src/Box2D ./external/lib
 	@$(ECHO) ""
 	@$(ECHO) " directory clean Done"
 	@$ rm -rf report.log || true
-	@$ rm -rf external/lib/libBox2D.a
 
 profile: setup $(BINDIR)/$(TARGET)
 	@mkdir -p profile
