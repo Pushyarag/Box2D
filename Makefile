@@ -174,5 +174,7 @@ report:
 	@$ rm -rf Beamer.lof || true
 	@$ rm -rf Beamer.snm || true
 	@$ rm -rf Beamer.nav || true
-	@$ rm -rf reports || true
+	@$ mv ./Beamer.pdf ./reports/Beamer.pdf
+	@$ mv ./report.pdf ./reports/report.pdf
+
 	@$(ECHO) "Reporting Done ..."
