@@ -155,8 +155,9 @@ report:
 	@$ bibtex report
 	@$ pdflatex report.tex 1>/dev/null  
 	@$ pdflatex Beamer.tex 1>/dev/null 
+	@$ pdflatex Beamer.tex 1>/dev/null 
 	@$(ECHO) ""
-	@$(ECHO) "Generating slides.pdf ..."	
+	@$(ECHO) "Generating Beamer.pdf ..."	
 	@$ rm -rf report.aux || true	
 	@$ rm -rf report.bbl || true
 	@$ rm -rf report.log || true
