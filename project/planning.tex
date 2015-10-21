@@ -1,0 +1,18 @@
+\chapter{Project Planning}
+\section{Frequency estimation of a periodic wave}
+\paragraph{}
+We started by calculating the frequency estimation of a periodic wave.The technique did not require us to use Fourier transform so it made things simple.Our approach to this was the rule that frequency of a peridoc signal is proportional to the number of maxima or minima in a fixed finite time interval.
+\section{Frequency estimation of a non-periodic wave}
+\paragraph{}
+After we were successful in finding the period of a periodic wave,the next challenge was that the audio signals practically are not exactly periodic because of the minute disturbances in the medium which cause considerable fluctuations in the audio signal in the order of period.So we changed the approach and calculated the period by brute-force method i.e varying period within certain limits and checking which value of period satisfied the required conditions the most.
+\section{Frequency estimation with Fourier Analysis}
+\subsection{No Harmonics}
+\paragraph{}
+The above method was successful but it was slow,then we finally resorted to using the fast Fourier transform provided by MATLAB,our operating environment.But even that was not enough because if T is the period then nT, where n=2,3,4...... can also be the period.So we were not sure if we got the right frequency.So we created an artificial sine wave with the detected frequency and compared with the input.As doubted errors occurred due to above reason.
+\subsection{In presence of Harmonics}
+\paragraph{}
+Fortunately,the solution to the above problem was the problem itself.If more than one harmonics are present then we can find the fundamental frequency by two methods i.e by finding the least frequency in them or by calculating the difference between two consecutive harmonics.In almost all the cases both give the same result.But in few cases the first methods fails if the least frequency is undetected.If something like that happens the second method ensures the correctness of the frequency.
+\section{Note Detection}
+\paragraph{}
+Once we were able to calculate the frequency of a note the next challenge was to isolate the note from the audio input.Since our code works only if the input contains a single note and no other signals.Initially we limited the domain of the input and designed a note detection method which works on the fact that a note begins with fast increase in intensity and ends with decrease in intensity below a threshold.The method worked perfectly except when a two notes were very close i.e when a note started before a note ended.So two notes were taken as a single note and thereby resulted in errors while detected frequency in that region.Since the note detection was not the main agenda of our project we learned from external sources to develop the note detection which used Gaussian filters and other advanced functions provided by MATLAB.
+

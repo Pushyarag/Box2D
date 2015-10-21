@@ -1,18 +1,3 @@
-Skip to content
-This repository  
-Search
-Pull requests
-Issues
-Gist
- @Pushyarag
- Unwatch 1
-  Star 0
-  Fork 1 Pushyarag/Box2D
- Branch: master  Box2D/src/render.cpp
-49ed52  29 days ago
-@Pushyarag Pushyarag original_base_code
-1 contributor
-RawBlameHistory    205 lines (180 sloc)  5.18 KB
 /*
 * Copyright (c) 2006-2007 Erin Catto http://www.box2d.org
 *
@@ -217,5 +202,3 @@ void debug_draw_t::DrawAABB(b2AABB* aabb, const b2Color& c)
 	glVertex2f(aabb->lowerBound.x, aabb->upperBound.y);
 	glEnd();
 }
-Status API Training Shop Blog About Pricing
-© 2015 GitHub, Inc. Terms Privacy Security Contact Help

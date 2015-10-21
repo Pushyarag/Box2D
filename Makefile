@@ -31,9 +31,12 @@ GL_ROOT=/usr/include/
 LIBS = -lBox2D -lglui -lglut -lGLU -lGL
 
 # Compiler and Linker flags
-CPPFLAGS =-g -Wall -fno-strict-aliasing
+CPPFLAGS =  -O3 -Wall -fno-strict-aliasing
 CPPFLAGS+=-I $(BOX2D_ROOT)/include -I $(GLUI_ROOT)/include
 LDFLAGS+=-L $(BOX2D_ROOT)/lib -L $(GLUI_ROOT)/lib
+
+
+
 
 ######################################
 
@@ -57,18 +60,20 @@ INCS := $(wildcard $(SRCDIR)/*.hpp)
 OBJS := $(SRCS:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 
 
-.PHONY: all setup doc clean distclean
+.PHONY: all setup release codeDoc clean  compile distclean report profile release
+all: setup release codeDoc report 
 
-all: setup $(BINDIR)/$(TARGET)
 
 setup:
+	@$(ECHO) ""
 	@$(ECHO) "Setting up compilation..."
 	@mkdir -p obj
 	@mkdir -p bin
+	
 
 $(BINDIR)/$(TARGET): $(OBJS)
 	@$(PRINTF) "$(MESG_COLOR)Building executable:$(NO_COLOR) $(FILE_COLOR) %16s$(NO_COLOR)" "$(notdir $@)"
-	@$(CC) -o $@ $(LDFLAGS) $(OBJS) $(LIBS) 2> temp.log || touch temp.err
+	@$(CC) -pg -o $@ $(LDFLAGS) -O3 $(OBJS) $(LIBS) 2> temp.log || touch temp.err
 	@if test -e temp.err; \
 	then $(PRINTF) $(ERR_FMT) $(ERR_STRING) && $(CAT) temp.log; \
 	elif test -s temp.log; \
@@ -81,7 +86,7 @@ $(BINDIR)/$(TARGET): $(OBJS)
 
 $(OBJS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp
 	@$(PRINTF) "$(MESG_COLOR)Compiling: $(NO_COLOR) $(FILE_COLOR) %25s$(NO_COLOR)" "$(notdir $<)"
-	@$(CC) $(CPPFLAGS) -c $< -o $@ -MD 2> temp.log || touch temp.err
+	@$(CC) $(CPPFLAGS) -pg -c $< -o $@ -MD 2> temp.log || touch temp.err
 	@if test -e temp.err; \
 	then $(PRINTF) $(ERR_FMT) $(ERR_STRING) && $(CAT) temp.log; \
 	elif test -s temp.log; \
@@ -90,16 +95,86 @@ $(OBJS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp
 	fi;
 	@$(RM) -f temp.log temp.err
 
-doc:
+codeDoc:
+	@$(ECHO) ""
 	@$(ECHO) -n "Generating Doxygen Documentation ...  "
 	@$(RM) -rf doc/html
 	@$(DOXYGEN) $(DOCDIR)/Doxyfile 2 > /dev/null
-	@$(ECHO) "Done"
+	@$(ECHO) ""
+	@$(ECHO) " Documenting Done"
 
 clean:
+	@$(ECHO) ""
 	@$(ECHO) -n "Cleaning up..."
 	@$(RM) -rf $(OBJDIR) *~ $(DEPS) $(SRCDIR)/*~
-	@$(ECHO) "Done"
+	@$(ECHO) ""
+	@$(ECHO) " cleaning Done"
 
 distclean: clean
-	@$(RM) -rf $(BINDIR) $(DOCDIR)/html
+	@$(RM) -rf $(BINDIR) $(DOCDIR)/html profile reports ./external/src/Box2D ./external/lib
+	@$(ECHO) ""
+	@$(ECHO) " directory clean Done"
+	@$ rm -rf report.log || true
+
+profile: setup $(BINDIR)/$(TARGET)
+	@mkdir -p profile
+	@$(ECHO) ""
+	@$(ECHO) "Profiling using gprof ..."
+	@cd profile && ../bin/cs251_base 
+	@cd profile && gprof ../bin/cs251_base gmon.out > analysis.txt
+	@$(ECHO) ""
+	@$(ECHO) "Generating dot file ..."
+	@cd profile && python ../external/gprof2dot.py analysis.txt -o analysis.dot
+	@$(ECHO) ""
+	@$(ECHO) "Generating callgraph ..."
+	@cd profile && dot -Tpng analysis.dot -o callgraph.png
+	@$(ECHO) ""
+	@$(ECHO) "Profiling Done"
+
+compile:
+	@make $(BINDIR)/$(TARGET)
+
+release: setup 
+	@pushd ./external/src/
+	@cd ./external/src/ && tar xvzf Box2D.tgz
+	@cd ./external/src/Box2D/ && mkdir -p build251
+	@cd ./external/src/Box2D/build251/ && cmake -DCMAKE_BUILD_TYPE=Release ../
+	@cd ./external/src/Box2D/build251/ && make
+	@cd ./external/src/Box2D/build251/ && make install
+	@make $(BINDIR)/$(TARGET)
+	@$(ECHO) ""
+	@$(ECHO) "Release version successfully created ..."
+
+report: 
+	@mkdir -p reports
+	@$(ECHO) ""
+	@$(ECHO) "Generating report.pdf ..."
+	@$ pdflatex report.tex tex 1>/dev/null
+	@$ bibtex report
+	@$ pdflatex report.tex tex 1>/dev/null
+	@$ bibtex report
+	@$ pdflatex report.tex 1>/dev/null  
+	@$ pdflatex Beamer.tex 1>/dev/null 
+	@$ pdflatex Beamer.tex 1>/dev/null 
+	@$(ECHO) ""
+	@$(ECHO) "Generating Beamer.pdf ..."	
+	@$ rm -rf report.aux || true	
+	@$ rm -rf report.bbl || true
+	@$ rm -rf report.log || true
+	@$ rm -rf report.toc || true
+	@$ rm -rf report.blg || true
+	@$ rm -rf report.out || true
+	@$ rm -rf report.lof || true
+	@$ rm -rf Beamer.aux || true	
+	@$ rm -rf Beamer.bbl || true
+	@$ rm -rf Beamer.log || true
+	@$ rm -rf Beamer.toc || true
+	@$ rm -rf Beamer.blg || true
+	@$ rm -rf Beamer.out || true
+	@$ rm -rf Beamer.lof || true
+	@$ rm -rf Beamer.snm || true
+	@$ rm -rf Beamer.nav || true
+	@$ mv ./Beamer.pdf ./reports/Beamer.pdf
+	@$ mv ./report.pdf ./reports/report.pdf
+
+	@$(ECHO) "Reporting Done ..."
